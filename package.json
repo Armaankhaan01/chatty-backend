@@ -3,17 +3,20 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
+    "start": "nodemon ./build/app.js",
     "dev": "nodemon -r tsconfig-paths/register src/app.ts | bunyan",
     "lint:check": "eslint",
     "lint:fix": "eslint --fix",
     "prettier:check": "prettier --check 'src/**/*.{js,ts,css,scss,json}'",
-    "prettier:fix": "prettier --write 'src/**/*.{js,ts,css,scss,json}'"
+    "prettier:fix": "prettier --write 'src/**/*.{js,ts,css,scss,json}'",
+    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@bull-board/express": "^5.21.4",
     "@socket.io/redis-adapter": "^8.3.0",
     "bunyan": "^1.8.15",
     "compression": "^1.7.4",
@@ -28,7 +31,8 @@
     "mongoose": "^8.5.2",
     "redis": "^4.7.0",
     "socket.io": "^4.7.5",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "typescript-transform-paths": "^3.4.11"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
@@ -45,6 +49,7 @@
     "globals": "^15.9.0",
     "prettier": "^3.3.3",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4.2.0",
     "typescript-eslint": "^8.1.0"
   }

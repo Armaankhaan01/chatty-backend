@@ -15,15 +15,12 @@ import HTTP_STATUS from 'http-status-codes';
 import compression from 'compression';
 import Logger from 'bunyan';
 import 'express-async-errors';
-import { config } from './config';
 import { Server } from 'socket.io';
 import { createClient } from 'redis';
 import { createAdapter } from '@socket.io/redis-adapter';
-import applicationRoutes from './routes';
-import {
-  CustomError,
-  IErrorResponse,
-} from './shared/globals/helpers/error-handler';
+import { config } from '@root/config';
+import applicationRoutes from '@root/routes';
+import { CustomError, IErrorResponse } from '@global/helpers/error-handler';
 
 const SERVER_PORT = 5000;
 const log: Logger = config.createLogger('setupServer');
@@ -129,7 +126,9 @@ export class ChattyServer {
       log.info(`Server is running on port ${SERVER_PORT}`);
     });
   }
-  private socketIOConnections(io: Server): void {} // TODO: Implement socketIO connections
+  private socketIOConnections(io: Server): void {
+    log.info('SocketIO connections have been established', io);
+  } // TODO: Implement socketIO connections
 }
 
 export default ChattyServer;
