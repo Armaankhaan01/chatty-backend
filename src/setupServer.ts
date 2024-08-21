@@ -1,11 +1,4 @@
-import {
-  Application,
-  json,
-  urlencoded,
-  Response,
-  Request,
-  NextFunction,
-} from 'express';
+import { Application, json, urlencoded, Response, Request, NextFunction } from 'express';
 import http from 'http';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -78,20 +71,13 @@ export class ChattyServer {
         message: `Can't find ${req.originalUrl} on this server!`,
       });
     });
-    app.use(
-      (
-        error: IErrorResponse,
-        _req: Request,
-        res: Response,
-        next: NextFunction,
-      ) => {
-        log.error(error);
-        if (error instanceof CustomError) {
-          return res.status(error.statusCode).json(error.serializeErrors());
-        }
-        next();
-      },
-    );
+    app.use((error: IErrorResponse, _req: Request, res: Response, next: NextFunction) => {
+      log.error(error);
+      if (error instanceof CustomError) {
+        return res.status(error.statusCode).json(error.serializeErrors());
+      }
+      next();
+    });
   }
 
   private async startServer(app: Application): Promise<void> {
@@ -127,7 +113,7 @@ export class ChattyServer {
     });
   }
   private socketIOConnections(io: Server): void {
-    log.info('SocketIO connections have been established', io);
+    log.info('SocketIO connections have been established', io.adapter.name);
   } // TODO: Implement socketIO connections
 }
 
