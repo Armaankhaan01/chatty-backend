@@ -5,6 +5,7 @@
         "cloudinary",
         "ipaddress",
         "tseslint",
-        "ttsc"
+        "ttsc",
+        "ZADD"
     ]
 }
