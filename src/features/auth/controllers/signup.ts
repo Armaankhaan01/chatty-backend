@@ -12,6 +12,10 @@ import { StatusCodes } from 'http-status-codes';
 import { UserCache } from '@services/redis/user.cache';
 import { IUserDocument } from '@user/interfaces/user.interface';
 import { config } from '@root/config';
+import { omit } from 'lodash';
+import { authQueue } from '@services/queues/auth.queue';
+import { userQueue } from '@services/queues/user.queue';
+import JWT from 'jsonwebtoken';
 const log = config.createLogger('authController');
 
 const userCache: UserCache = new UserCache();
@@ -21,7 +25,7 @@ export class SignUp {
     const { username, email, password, avatarColor, avatarImage } = req.body;
     const checkIfUserExists: IAuthDocument | null = await authService.getUserByUsernameOrEmail(username, email);
     if (checkIfUserExists) {
-      throw new BadRequestError('Invalid credentials');
+      throw new BadRequestError('User already Exists');
     }
     const authObjectId: ObjectId = new ObjectId();
     const userObjectId: ObjectId = new ObjectId();
@@ -45,9 +49,33 @@ export class SignUp {
     log.info('userDataForCache', userDataForCache);
     userDataForCache.profilePicture = `https://res.cloudinary.com/${config.CLOUD_NAME}/image/upload/v${result.version}/${userObjectId}`;
     await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
-    // const user = await authService.signupUser(username, email, password, avatarColor, avatarImage);
 
-    res.status(StatusCodes.CREATED).json({ message: 'User created successfully', authData });
+    // Add to Mongo database
+    omit(userDataForCache, ['password', 'uId', 'email', 'username', 'avatarColor']);
+    authQueue.addAuthUserJob('addAuthUserToDB', {
+      value: userDataForCache,
+    });
+    userQueue.addUserJob('addUserToDB', {
+      value: userDataForCache,
+    });
+
+    const userJWT: string = SignUp.prototype.signupToken(authData, userObjectId);
+    req.session = { jwt: userJWT };
+
+    res.status(StatusCodes.CREATED).json({ message: 'User created successfully', user: userDataForCache, token: userJWT });
+  }
+
+  private signupToken(data: IAuthDocument, userObjectId: ObjectId): string {
+    return JWT.sign(
+      {
+        userId: userObjectId,
+        uId: data.uId,
+        email: data.email,
+        username: data.username,
+        avatarColor: data.avatarColor,
+      },
+      config.JWT_TOKEN!,
+    );
   }
 
   private signupData(data: ISignUpData): IAuthDocument {

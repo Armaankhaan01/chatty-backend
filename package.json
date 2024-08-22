@@ -19,6 +19,7 @@
     "@bull-board/express": "^5.21.4",
     "@socket.io/redis-adapter": "^8.3.0",
     "bcryptjs": "^2.4.3",
+    "bull": "^4.16.0",
     "bunyan": "^1.8.15",
     "cloudinary": "^2.4.0",
     "compression": "^1.7.4",
