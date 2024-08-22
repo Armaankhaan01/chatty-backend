@@ -3,33 +3,36 @@ import { Request, Response } from 'express';
 import { joiValidation } from '@global/decorators/joi-validation.decorators';
 import { signupSchema } from '@auth/schemes/signup';
 import { IAuthDocument, ISignUpData } from '@auth/interfaces/auth.interface';
-import { authService } from '@root/shared/services/db/auth.service';
-import { BadRequestError } from '@global/helpers/error-handler';
+import { authService } from '@services/db/auth.service';
 import { Helpers } from '@global/helpers/helpers';
 import { UploadApiResponse } from 'cloudinary';
 import { uploads } from '@global/helpers/cloudinary-upload';
-import { StatusCodes } from 'http-status-codes';
-import { UserCache } from '@services/redis/user.cache';
+import HTTP_STATUS from 'http-status-codes';
 import { IUserDocument } from '@user/interfaces/user.interface';
-import { config } from '@root/config';
-import { omit } from 'lodash';
+import { UserCache } from '@services/redis/user.cache';
+import JWT from 'jsonwebtoken';
 import { authQueue } from '@services/queues/auth.queue';
 import { userQueue } from '@services/queues/user.queue';
-import JWT from 'jsonwebtoken';
-const log = config.createLogger('authController');
+import { config } from '@root/config';
+import { BadRequestError } from '@global/helpers/error-handler';
 
 const userCache: UserCache = new UserCache();
+
 export class SignUp {
   @joiValidation(signupSchema)
   public async create(req: Request, res: Response): Promise<void> {
     const { username, email, password, avatarColor, avatarImage } = req.body;
-    const checkIfUserExists: IAuthDocument | null = await authService.getUserByUsernameOrEmail(username, email);
-    if (checkIfUserExists) {
-      throw new BadRequestError('User already Exists');
+    const checkIfUserExist: IAuthDocument = await authService.getUserByUsernameOrEmail(username, email);
+    if (checkIfUserExist) {
+      throw new BadRequestError('Invalid credentials');
     }
+
     const authObjectId: ObjectId = new ObjectId();
     const userObjectId: ObjectId = new ObjectId();
     const uId = `${Helpers.generateRandomIntegers(12)}`;
+    // the reason we are using SignUp.prototype.signupData and not this.signupData is because
+    // of how we invoke the create method in the routes method.
+    // the scope of the this object is not kept when the method is invoked
     const authData: IAuthDocument = SignUp.prototype.signupData({
       _id: authObjectId,
       uId,
@@ -38,34 +41,26 @@ export class SignUp {
       password,
       avatarColor,
     });
-
     const result: UploadApiResponse = (await uploads(avatarImage, `${userObjectId}`, true, true)) as UploadApiResponse;
-
     if (!result?.public_id) {
-      throw new BadRequestError('File Upload: Error occurred. Try again!');
+      throw new BadRequestError('File upload: Error occurred. Try again.');
     }
-    // Add to redis Cache
+
+    // Add to redis cache
     const userDataForCache: IUserDocument = SignUp.prototype.userData(authData, userObjectId);
-    log.info('userDataForCache', userDataForCache);
     userDataForCache.profilePicture = `https://res.cloudinary.com/${config.CLOUD_NAME}/image/upload/v${result.version}/${userObjectId}`;
     await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
 
-    // Add to Mongo database
-    omit(userDataForCache, ['password', 'uId', 'email', 'username', 'avatarColor']);
-    authQueue.addAuthUserJob('addAuthUserToDB', {
-      value: userDataForCache,
-    });
-    userQueue.addUserJob('addUserToDB', {
-      value: userDataForCache,
-    });
+    // Add to database
+    authQueue.addAuthUserJob('addAuthUserToDB', { value: authData });
+    userQueue.addUserJob('addUserToDB', { value: userDataForCache });
 
-    const userJWT: string = SignUp.prototype.signupToken(authData, userObjectId);
-    req.session = { jwt: userJWT };
-
-    res.status(StatusCodes.CREATED).json({ message: 'User created successfully', user: userDataForCache, token: userJWT });
+    const userJwt: string = SignUp.prototype.signToken(authData, userObjectId);
+    req.session = { jwt: userJwt };
+    res.status(HTTP_STATUS.CREATED).json({ message: 'User created successfully', user: userDataForCache, token: userJwt });
   }
 
-  private signupToken(data: IAuthDocument, userObjectId: ObjectId): string {
+  private signToken(data: IAuthDocument, userObjectId: ObjectId): string {
     return JWT.sign(
       {
         userId: userObjectId,
@@ -79,7 +74,7 @@ export class SignUp {
   }
 
   private signupData(data: ISignUpData): IAuthDocument {
-    const { _id, uId, password, username, email, avatarColor } = data;
+    const { _id, username, email, uId, password, avatarColor } = data;
     return {
       _id,
       uId,
@@ -92,7 +87,7 @@ export class SignUp {
   }
 
   private userData(data: IAuthDocument, userObjectId: ObjectId): IUserDocument {
-    const { _id, uId, username, email, avatarColor, password } = data;
+    const { _id, username, email, uId, password, avatarColor } = data;
     return {
       _id: userObjectId,
       authId: _id,

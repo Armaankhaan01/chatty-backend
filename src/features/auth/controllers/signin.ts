@@ -1,34 +1,29 @@
 import { Request, Response } from 'express';
-import { joiValidation } from '@global/decorators/joi-validation.decorators';
-import { StatusCodes } from 'http-status-codes';
+import { config } from '@root/config';
 import JWT from 'jsonwebtoken';
-import { authService } from '@root/shared/services/db/auth.service';
-import { BadRequestError } from '@global/helpers/error-handler';
+import { joiValidation } from '@global/decorators/joi-validation.decorators';
+import HTTP_STATUS from 'http-status-codes';
+import { authService } from '@services/db/auth.service';
 import { signinSchema } from '@auth/schemes/signin';
 import { IAuthDocument } from '@auth/interfaces/auth.interface';
-import { config } from '@root/config';
-import { IUserDocument } from '@user/interfaces/user.interface';
+import { BadRequestError } from '@global/helpers/error-handler';
 import { userService } from '@services/db/user.service';
+import { IUserDocument } from '@user/interfaces/user.interface';
 
 export class SignIn {
   @joiValidation(signinSchema)
   public async read(req: Request, res: Response): Promise<void> {
-    const { username } = req.body;
-    const existingUser: IAuthDocument | null = await authService.getUserByUsername(username);
+    const { username, password } = req.body;
+    const existingUser: IAuthDocument = await authService.getAuthUserByUsername(username);
     if (!existingUser) {
       throw new BadRequestError('Invalid credentials');
     }
 
-    const comparePassword: boolean = await existingUser.comparePassword(req.body.password);
-    if (!comparePassword) {
+    const passwordsMatch: boolean = await existingUser.comparePassword(password);
+    if (!passwordsMatch) {
       throw new BadRequestError('Invalid credentials');
     }
-    console.log(existingUser._id);
-
     const user: IUserDocument = await userService.getUserByAuthId(`${existingUser._id}`);
-
-    console.log(user);
-
     const userJwt: string = JWT.sign(
       {
         userId: user._id,
@@ -36,21 +31,19 @@ export class SignIn {
         email: existingUser.email,
         username: existingUser.username,
         avatarColor: existingUser.avatarColor,
-
-        iat: Date.now(),
       },
       config.JWT_TOKEN!,
     );
     req.session = { jwt: userJwt };
     const userDocument: IUserDocument = {
       ...user,
-      authId: existingUser._id,
-      username: existingUser.username,
-      email: existingUser.email,
-      avatarColor: existingUser.avatarColor,
-      uId: existingUser.uId,
-      createdAt: existingUser.createdAt,
+      authId: existingUser!._id,
+      username: existingUser!.username,
+      email: existingUser!.email,
+      avatarColor: existingUser!.avatarColor,
+      uId: existingUser!.uId,
+      createdAt: existingUser!.createdAt,
     } as IUserDocument;
-    res.status(StatusCodes.OK).json({ user: userDocument, token: userJwt, message: 'User logged in successfully' });
+    res.status(HTTP_STATUS.OK).json({ message: 'User login successfully', user: userDocument, token: userJwt });
   }
 }
