@@ -4,6 +4,7 @@
         "chattyapp",
         "cloudinary",
         "ipaddress",
+        "signout",
         "tseslint",
         "ttsc",
         "ZADD"
