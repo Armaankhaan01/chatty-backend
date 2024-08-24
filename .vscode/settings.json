@@ -2,6 +2,13 @@
     "cSpell.words": [
         "camelcase",
         "chattyapp",
-        "tseslint"
+        "cloudinary",
+        "currentuser",
+        "HGETALL",
+        "ipaddress",
+        "signout",
+        "tseslint",
+        "ttsc",
+        "ZADD"
     ]
 }
