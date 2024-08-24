@@ -39,8 +39,8 @@ export class ChattyServer {
         name: 'session',
         keys: [config.SECRET_KEY_ONE!, config.SECRET_KEY_TWO!],
         maxAge: 24 * 7 * 3600000, // 7 days
-        secure: config.NODE_ENV !== 'development',
-      }),
+        secure: config.NODE_ENV !== 'development'
+      })
     );
     app.use(hpp());
     app.use(helmet());
@@ -49,8 +49,8 @@ export class ChattyServer {
         origin: config.CLIENT_URL,
         credentials: true,
         optionsSuccessStatus: 200,
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-      }),
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+      })
     );
   }
 
@@ -68,7 +68,7 @@ export class ChattyServer {
     app.all('*', (req: Request, res: Response) => {
       res.status(HTTP_STATUS.NOT_FOUND).json({
         status: 'fail',
-        message: `Can't find ${req.originalUrl} on this server!`,
+        message: `Can't find ${req.originalUrl} on this server!`
       });
     });
     app.use((error: IErrorResponse, _req: Request, res: Response, next: NextFunction) => {
@@ -95,8 +95,8 @@ export class ChattyServer {
     const io: Server = new Server(httpServer, {
       cors: {
         origin: config.CLIENT_URL,
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-      },
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+      }
     });
 
     const pubClient = createClient({ url: config.REDIS_HOST });

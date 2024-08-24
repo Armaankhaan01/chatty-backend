@@ -19,15 +19,13 @@
     "allowSyntheticDefaultImports": true,
     "pretty": true,
     "resolveJsonModule": true,
-    "plugins": [
-      { "transform": "typescript-transform-paths" },
-      { "transform": "typescript-transform-paths", "afterDeclaration": true }
-    ],
+    "plugins": [{ "transform": "typescript-transform-paths" }, { "transform": "typescript-transform-paths", "afterDeclaration": true }],
     "paths": {
       "@auth/*": ["src/features/auth/*"],
       "@user/*": ["src/features/user/*"],
       "@global/*": ["src/shared/globals/*"],
       "@services/*": ["src/shared/services/*"],
+      "@middlewares/*": ["src/shared/middlewares/*"],
       "@socket/*": ["src/shared/socket/*"],
       "@worker/*": ["src/shared/worker/*"],
       "@root/*": ["src/*"]

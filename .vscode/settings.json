@@ -3,6 +3,8 @@
         "camelcase",
         "chattyapp",
         "cloudinary",
+        "currentuser",
+        "HGETALL",
         "ipaddress",
         "signout",
         "tseslint",

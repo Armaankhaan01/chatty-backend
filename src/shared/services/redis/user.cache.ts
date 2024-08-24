@@ -44,7 +44,7 @@ export class UserCache extends BaseCache {
       quote,
       bgImageId,
       bgImageVersion,
-      social,
+      social
     } = createdUser;
 
     const firstList: string[] = [
@@ -61,7 +61,7 @@ export class UserCache extends BaseCache {
       'postsCount',
       `${postsCount}`,
       'createdAt',
-      `${createdAt}`,
+      `${createdAt}`
     ];
 
     const secondList: string[] = [
@@ -79,7 +79,7 @@ export class UserCache extends BaseCache {
       'notifications',
       JSON.stringify(notifications),
       'social',
-      JSON.stringify(social),
+      JSON.stringify(social)
     ];
     const thirdList: string[] = [
       'work',
@@ -93,7 +93,7 @@ export class UserCache extends BaseCache {
       'bgImageVersion',
       `${bgImageVersion}`,
       'bgImageId',
-      `${bgImageId}`,
+      `${bgImageId}`
     ];
 
     const dataToSave: string[] = [...firstList, ...secondList, ...thirdList];

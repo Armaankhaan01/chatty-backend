@@ -15,8 +15,7 @@ class Config {
   public CLOUD_API_KEY: string | undefined;
   public CLOUD_API_SECRET: string | undefined;
 
-  private readonly DEFAULT_DATABASE_URL: string =
-    'mongodb://192.168.1.2:27017/chattyapp-backend';
+  private readonly DEFAULT_DATABASE_URL: string = 'mongodb://192.168.1.2:27017/chattyapp-backend';
   constructor() {
     this.DATABASE_URL = process.env.DATABASE_URL || this.DEFAULT_DATABASE_URL;
     this.JWT_TOKEN = process.env.JWT_TOKEN || '1234';
@@ -44,7 +43,7 @@ class Config {
     cloudinary.v2.config({
       cloud_name: this.CLOUD_NAME,
       api_key: this.CLOUD_API_KEY,
-      api_secret: this.CLOUD_API_SECRET,
+      api_secret: this.CLOUD_API_SECRET
     });
   }
 }

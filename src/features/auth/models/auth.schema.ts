@@ -11,16 +11,16 @@ const authSchema: Schema = new Schema(
     email: { type: String },
     password: { type: String },
     avatarColor: { type: String },
-    createdAt: { type: Date, default: Date.now() },
+    createdAt: { type: Date, default: Date.now() }
   },
   {
     toJSON: {
       transform(_doc, ret) {
         delete ret.password;
         return ret;
-      },
-    },
-  },
+      }
+    }
+  }
 );
 
 authSchema.pre('save', async function (this: IAuthDocument, next: () => void) {

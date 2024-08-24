@@ -30,9 +30,9 @@ export class SignIn {
         uId: existingUser.uId,
         email: existingUser.email,
         username: existingUser.username,
-        avatarColor: existingUser.avatarColor,
+        avatarColor: existingUser.avatarColor
       },
-      config.JWT_TOKEN!,
+      config.JWT_TOKEN!
     );
     req.session = { jwt: userJwt };
     const userDocument: IUserDocument = {
@@ -42,7 +42,7 @@ export class SignIn {
       email: existingUser!.email,
       avatarColor: existingUser!.avatarColor,
       uId: existingUser!.uId,
-      createdAt: existingUser!.createdAt,
+      createdAt: existingUser!.createdAt
     } as IUserDocument;
     res.status(HTTP_STATUS.OK).json({ message: 'User login successfully', user: userDocument, token: userJwt });
   }

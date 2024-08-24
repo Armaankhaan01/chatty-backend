@@ -11,7 +11,7 @@ class UserService {
       { $match: { _id: new mongoose.Types.ObjectId(userId) } },
       { $lookup: { from: 'Auth', localField: 'authId', foreignField: '_id', as: 'authId' } },
       { $unwind: '$authId' },
-      { $project: this.aggregateProject() },
+      { $project: this.aggregateProject() }
     ]);
     return users[0];
   }
@@ -20,7 +20,7 @@ class UserService {
       { $match: { authId: new mongoose.Types.ObjectId(authId) } },
       { $lookup: { from: 'Auth', localField: 'authId', foreignField: '_id', as: 'authId' } },
       { $unwind: '$authId' },
-      { $project: this.aggregateProject() },
+      { $project: this.aggregateProject() }
     ]);
     return users[0];
   }
@@ -46,7 +46,7 @@ class UserService {
       social: 1,
       bgImageVersion: 1,
       bgImageId: 1,
-      profilePicture: 1,
+      profilePicture: 1
     };
   }
 }
