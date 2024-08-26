@@ -5,9 +5,9 @@ import Queue, { Job } from 'bull';
 import Logger from 'bunyan';
 import { config } from '@root/config';
 import { IAuthJob } from '@auth/interfaces/auth.interface';
-import { IUserJob } from '@user/interfaces/user.interface';
+import { IEmailJob, IUserJob } from '@user/interfaces/user.interface';
 
-type IBaseJobData = IAuthJob | IUserJob;
+type IBaseJobData = IAuthJob | IUserJob | IEmailJob;
 
 let bullAdapters: BullAdapter[] = [];
 
@@ -29,7 +29,7 @@ export abstract class BaseQueue {
     this.log = config.createLogger(`${queueName} Queue`);
 
     this.queue.on('completed', (job: Job) => {
-      job.remove(); // remove job from queue
+      // job.remove(); // remove job from queue
     });
 
     this.queue.on('global:completed', (jobId: string) => {

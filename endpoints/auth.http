@@ -17,6 +17,8 @@ withCredentials: true
 
 
 ###
+
+
 POST {{baseUrl}}/{{urlPath}}/signin
 Content-Type: application/json
 Accept: application/json
@@ -24,7 +26,7 @@ withCredentials: true
 
 {
 "username": "test4",
-"password": "test1234"
+"password": "test12345"
 }
 
 
@@ -40,3 +42,22 @@ Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
+###
+POST {{baseUrl}}/{{urlPath}}/forgot-password
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{"email": "test4@test.com"}
+
+
+###
+POST {{baseUrl}}/{{urlPath}}/reset-password/3165b36cdba813941e5838bb9a1fa9861845d678
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+"password": "test12345",
+"confirmPassword": "test12345"
+}
