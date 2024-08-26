@@ -9,8 +9,6 @@ import { IAuthDocument } from '@auth/interfaces/auth.interface';
 import { BadRequestError } from '@global/helpers/error-handler';
 import { userService } from '@services/db/user.service';
 import { IUserDocument } from '@user/interfaces/user.interface';
-import { mailTransport } from '@services/emails/mail.transport';
-
 export class SignIn {
   @joiValidation(signinSchema)
   public async read(req: Request, res: Response): Promise<void> {
@@ -44,7 +42,6 @@ export class SignIn {
       uId: existingUser!.uId,
       createdAt: existingUser!.createdAt
     } as IUserDocument;
-    await mailTransport.sendEmail('scot.kozey@ethereal.email', 'testing Development email ', 'This is a test Email');
 
     req.session = { jwt: userJwt };
     res.status(HTTP_STATUS.OK).json({ message: 'User login successfully', user: userDocument, token: userJwt });
