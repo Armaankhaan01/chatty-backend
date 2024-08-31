@@ -1,5 +1,5 @@
-import { ServerError } from '@global/helpers/error-handler';
-import { Helpers } from '@global/helpers/helpers';
+import { ServerError } from '@globals/helpers/error-handler';
+import { Helpers } from '@globals/helpers/helpers';
 import { config } from '@root/config';
 import { BaseCache } from '@services/redis/base.cache';
 import { IUserDocument } from '@user/interfaces/user.interface';

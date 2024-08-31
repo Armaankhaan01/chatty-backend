@@ -6,6 +6,7 @@
         "currentuser",
         "HGETALL",
         "ipaddress",
+        "lcov",
         "SENDGRID",
         "signout",
         "tseslint",

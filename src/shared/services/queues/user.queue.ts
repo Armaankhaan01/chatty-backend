@@ -1,4 +1,4 @@
-import { userWorker } from '@root/shared/workers/user.worker';
+import { userWorker } from '@workers/user.worker';
 import { BaseQueue } from './base.queue';
 import { IUserJob } from '@user/interfaces/user.interface';
 

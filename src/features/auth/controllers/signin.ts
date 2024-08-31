@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { config } from '@root/config';
 import JWT from 'jsonwebtoken';
-import { joiValidation } from '@global/decorators/joi-validation.decorators';
+import { joiValidation } from '@globals/decorators/joi-validation.decorators';
 import HTTP_STATUS from 'http-status-codes';
 import { authService } from '@services/db/auth.service';
 import { signinSchema } from '@auth/schemes/signin';
 import { IAuthDocument } from '@auth/interfaces/auth.interface';
-import { BadRequestError } from '@global/helpers/error-handler';
+import { BadRequestError } from '@globals/helpers/error-handler';
 import { userService } from '@services/db/user.service';
 import { IUserDocument } from '@user/interfaces/user.interface';
 export class SignIn {

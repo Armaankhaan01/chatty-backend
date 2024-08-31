@@ -1,4 +1,5 @@
 {
+  "exclude": ["jest.config.ts"],
   "compilerOptions": {
     "target": "es2015",
     "module": "commonjs",
@@ -23,11 +24,12 @@
     "paths": {
       "@auth/*": ["src/features/auth/*"],
       "@user/*": ["src/features/user/*"],
-      "@global/*": ["src/shared/globals/*"],
+      "@globals/*": ["src/shared/globals/*"],
       "@services/*": ["src/shared/services/*"],
       "@middlewares/*": ["src/shared/middlewares/*"],
-      "@socket/*": ["src/shared/socket/*"],
-      "@worker/*": ["src/shared/worker/*"],
+      "@sockets/*": ["src/shared/sockets/*"],
+      "@workers/*": ["src/shared/workers/*"],
+      "@mocks/*": ["src/mocks/*"],
       "@root/*": ["src/*"]
     }
   }

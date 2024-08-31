@@ -1,12 +1,12 @@
 import { ObjectId } from 'mongodb';
 import { Request, Response } from 'express';
-import { joiValidation } from '@global/decorators/joi-validation.decorators';
+import { joiValidation } from '@globals/decorators/joi-validation.decorators';
 import { signupSchema } from '@auth/schemes/signup';
 import { IAuthDocument, ISignUpData } from '@auth/interfaces/auth.interface';
 import { authService } from '@services/db/auth.service';
-import { Helpers } from '@global/helpers/helpers';
+import { Helpers } from '@globals/helpers/helpers';
 import { UploadApiResponse } from 'cloudinary';
-import { uploads } from '@global/helpers/cloudinary-upload';
+import { uploads } from '@globals/helpers/cloudinary-upload';
 import HTTP_STATUS from 'http-status-codes';
 import { IUserDocument } from '@user/interfaces/user.interface';
 import { UserCache } from '@services/redis/user.cache';
@@ -14,7 +14,7 @@ import JWT from 'jsonwebtoken';
 import { authQueue } from '@services/queues/auth.queue';
 import { userQueue } from '@services/queues/user.queue';
 import { config } from '@root/config';
-import { BadRequestError } from '@global/helpers/error-handler';
+import { BadRequestError } from '@globals/helpers/error-handler';
 
 const userCache: UserCache = new UserCache();
 
