@@ -23,6 +23,7 @@ const config: Config = {
   coverageReporters: ['text-summary', 'lcov'],
   moduleNameMapper: {
     '@auth/(.*)': ['<rootDir>/src/features/auth/$1'],
+    '@post/(.*)': ['<rootDir>/src/features/post/$1'],
     '@user/(.*)': ['<rootDir>/src/features/user/$1'],
     '@globals/(.*)': ['<rootDir>/src/shared/globals/$1'],
     '@services/(.*)': ['<rootDir>/src/shared/services/$1'],

@@ -23,6 +23,7 @@
     "plugins": [{ "transform": "typescript-transform-paths" }, { "transform": "typescript-transform-paths", "afterDeclaration": true }],
     "paths": {
       "@auth/*": ["src/features/auth/*"],
+      "@post/*": ["src/features/post/*"],
       "@user/*": ["src/features/user/*"],
       "@globals/*": ["src/shared/globals/*"],
       "@services/*": ["src/shared/services/*"],
