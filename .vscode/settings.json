@@ -5,6 +5,8 @@
         "cloudinary",
         "currentuser",
         "HGETALL",
+        "HINCRBY",
+        "HMGET",
         "ipaddress",
         "lcov",
         "SENDGRID",
