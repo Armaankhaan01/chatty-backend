@@ -22,8 +22,8 @@ export class Get {
       posts = cachedPosts;
       totalPosts = await postCache.getTotalPostsFromCache();
     } else {
-      posts = await postService.getPost({}, skip, limit, { createdAt: -1 });
-      totalPosts = await postService.postCount();
+      posts = await postService.getPosts({}, skip, limit, { createdAt: -1 });
+      totalPosts = await postService.postsCount();
     }
     res.status(HTTP_STATUS.OK).json({ message: 'All posts', posts, totalPosts });
   }
@@ -36,7 +36,7 @@ export class Get {
 
     let posts: IPostDocument[] = [];
     const cachedPosts: IPostDocument[] = await postCache.getPostsWithImagesFromCache('post', newSkip, limit);
-    posts = cachedPosts.length ? cachedPosts : await postService.getPost({}, skip, limit, { createdAt: -1 });
-    res.status(HTTP_STATUS.OK).json({ message: 'All posts', posts });
+    posts = cachedPosts.length ? cachedPosts : await postService.getPosts({ imgId: '$ne', gifUrl: '$ne' }, skip, limit, { createdAt: -1 });
+    res.status(HTTP_STATUS.OK).json({ message: 'All posts with images', posts });
   }
 }

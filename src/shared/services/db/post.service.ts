@@ -19,7 +19,7 @@ class PostService {
     await Promise.all([post, user]);
   }
 
-  public async getPost(query: IGetPostsQuery, skip = 0, limit = 0, sort: Record<string, 1 | -1>): Promise<IPostDocument[]> {
+  public async getPosts(query: IGetPostsQuery, skip = 0, limit = 0, sort: Record<string, 1 | -1>): Promise<IPostDocument[]> {
     let postQuery = {};
     if (query?.imgId && query?.gifUrl) {
       postQuery = {
@@ -32,7 +32,7 @@ class PostService {
     return posts;
   }
 
-  public async postCount(): Promise<number> {
+  public async postsCount(): Promise<number> {
     const count: number = await PostModel.find({}).countDocuments();
     return count;
   }

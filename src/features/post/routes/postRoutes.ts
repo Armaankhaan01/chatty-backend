@@ -1,6 +1,6 @@
 import { authMiddleware } from '@middlewares/auth.middleware';
 import { Create } from '@post/controllers/create-post';
-import { Get } from '@post/controllers/get-post';
+import { Get } from '@post/controllers/get-posts';
 import express, { Router } from 'express';
 
 class PostRoutes {
