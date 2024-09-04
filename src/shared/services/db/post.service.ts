@@ -1,4 +1,4 @@
-import { IPostDocument } from '@post/interfaces/post.interface';
+import { IGetPostsQuery, IPostDocument } from '@post/interfaces/post.interface';
 import { PostModel } from '@post/models/post.schema';
 import { IUserDocument } from '@user/interfaces/user.interface';
 import { UserModel } from '@user/models/user.schema';
@@ -17,6 +17,24 @@ class PostService {
     );
 
     await Promise.all([post, user]);
+  }
+
+  public async getPost(query: IGetPostsQuery, skip = 0, limit = 0, sort: Record<string, 1 | -1>): Promise<IPostDocument[]> {
+    let postQuery = {};
+    if (query?.imgId && query?.gifUrl) {
+      postQuery = {
+        $or: [{ imgId: { $ne: '' } }, { gifUrl: { $ne: '' } }]
+      };
+    } else {
+      postQuery = query;
+    }
+    const posts: IPostDocument[] = await PostModel.aggregate([{ $match: postQuery }, { $skip: skip }, { $limit: limit }, { $sort: sort }]);
+    return posts;
+  }
+
+  public async postCount(): Promise<number> {
+    const count: number = await PostModel.find({}).countDocuments();
+    return count;
   }
 }
 

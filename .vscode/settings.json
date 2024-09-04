@@ -13,6 +13,9 @@
         "signout",
         "tseslint",
         "ttsc",
-        "ZADD"
+        "ZADD",
+        "ZCARD",
+        "ZCOUNT",
+        "ZRANGE"
     ]
 }

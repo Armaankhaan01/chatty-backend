@@ -1,9 +1,15 @@
 import Logger from 'bunyan';
 import { BaseCache } from './base.cache';
 import { config } from '@root/config';
-import { ISavePostToCache } from '@post/interfaces/post.interface';
+import { IPostDocument, ISavePostToCache } from '@post/interfaces/post.interface';
+import { ServerError } from '@globals/helpers/error-handler';
+import { Helpers } from '@globals/helpers/helpers';
 
 const log: Logger = config.createLogger('postCache');
+
+export type TPostCacheMultiType = {
+  [key: string]: IPostDocument[];
+};
 
 export class PostCache extends BaseCache {
   constructor() {
@@ -86,6 +92,108 @@ export class PostCache extends BaseCache {
     } catch (error) {
       log.error(error);
       throw new Error('Failed to connect to redis');
+    }
+  }
+
+  public async getPostsFromCache(key: string, start: number, end: number): Promise<IPostDocument[]> {
+    try {
+      if (!this.client.isOpen) {
+        await this.client.connect();
+      }
+      const reply: string[] = await this.client.ZRANGE(key, start, end, { REV: true });
+      const multi: ReturnType<typeof this.client.multi> = this.client.multi();
+      for (const value of reply) {
+        multi.HGETALL(`posts:${value}`);
+      }
+      const replies: IPostDocument[] = (await multi.exec()) as unknown as IPostDocument[];
+      for (const post of replies) {
+        post.commentsCount = Helpers.parseJson(`${post.commentsCount}`);
+        post.reactions = Helpers.parseJson(`${post.reactions}`);
+        post.createdAt = new Date(Helpers.parseJson(`${post.createdAt}`));
+      }
+      return replies;
+    } catch (error) {
+      log.error(error);
+      throw new ServerError('Server Error. Try again.');
+    }
+  }
+
+  public async getTotalPostsFromCache(): Promise<number> {
+    try {
+      if (!this.client.isOpen) {
+        await this.client.connect();
+      }
+      const count: number = await this.client.ZCARD('post');
+      return count;
+    } catch (error) {
+      log.error(error);
+      throw new ServerError('Server Error. Try again.');
+    }
+  }
+
+  public async getPostsWithImagesFromCache(key: string, start: number, end: number): Promise<IPostDocument[]> {
+    try {
+      if (!this.client.isOpen) {
+        await this.client.connect();
+      }
+      const reply: string[] = await this.client.ZRANGE(key, start, end, { REV: true });
+      const multi: ReturnType<typeof this.client.multi> = this.client.multi();
+      for (const value of reply) {
+        multi.HGETALL(`posts:${value}`);
+      }
+      const replies: IPostDocument[] = (await multi.exec()) as unknown as IPostDocument[];
+      const postWithImages: IPostDocument[] = [];
+
+      for (const post of replies) {
+        if ((post.imgId && post.imgVersion) || post.gifUrl) {
+          post.commentsCount = Helpers.parseJson(`${post.commentsCount}`);
+          post.reactions = Helpers.parseJson(`${post.reactions}`);
+          post.createdAt = new Date(Helpers.parseJson(`${post.createdAt}`));
+          postWithImages.push(post);
+        }
+      }
+      return postWithImages;
+    } catch (error) {
+      log.error(error);
+      throw new ServerError('Server Error. Try again.');
+    }
+  }
+  public async getUserPostsFromCache(key: string, uId: number): Promise<IPostDocument[]> {
+    try {
+      if (!this.client.isOpen) {
+        await this.client.connect();
+      }
+      const reply: string[] = await this.client.ZRANGE(key, uId, uId, { REV: true, BY: 'SCORE' });
+      const multi: ReturnType<typeof this.client.multi> = this.client.multi();
+      for (const value of reply) {
+        multi.HGETALL(`posts:${value}`);
+      }
+      const replies: IPostDocument[] = (await multi.exec()) as unknown as IPostDocument[];
+      const postReplies: IPostDocument[] = [];
+
+      for (const post of replies) {
+        post.commentsCount = Helpers.parseJson(`${post.commentsCount}`);
+        post.reactions = Helpers.parseJson(`${post.reactions}`);
+        post.createdAt = new Date(Helpers.parseJson(`${post.createdAt}`));
+        postReplies.push(post);
+      }
+      return postReplies;
+    } catch (error) {
+      log.error(error);
+      throw new ServerError('Server Error. Try again.');
+    }
+  }
+
+  public async getTotalUserPostsFromCache(uId: number): Promise<number> {
+    try {
+      if (!this.client.isOpen) {
+        await this.client.connect();
+      }
+      const count: number = await this.client.ZCOUNT('post', uId, uId);
+      return count;
+    } catch (error) {
+      log.error(error);
+      throw new ServerError('Server Error. Try again.');
     }
   }
 }
