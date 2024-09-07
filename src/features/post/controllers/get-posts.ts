@@ -20,7 +20,7 @@ export class Get {
     const cachedPosts: IPostDocument[] = await postCache.getPostsFromCache('post', newSkip, limit);
     if (cachedPosts.length > 0) {
       posts = cachedPosts;
-      totalPosts = await postCache.getTotalPostsFromCache();
+      totalPosts = await postCache.getTotalPostsInCache();
     } else {
       posts = await postService.getPosts({}, skip, limit, { createdAt: -1 });
       totalPosts = await postService.postsCount();
