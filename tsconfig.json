@@ -1,5 +1,4 @@
 {
-  "exclude": ["jest.config.ts"],
   "compilerOptions": {
     "target": "es2015",
     "module": "commonjs",
