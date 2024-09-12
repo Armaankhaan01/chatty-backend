@@ -24,7 +24,7 @@ describe('Get', () => {
       const req: Request = postMockRequest(newPost, authUserPayload, { page: '1' }) as Request;
       const res: Response = postMockResponse();
       jest.spyOn(PostCache.prototype, 'getPostsFromCache').mockResolvedValue([postMockData]);
-      jest.spyOn(PostCache.prototype, 'getTotalPostsFromCache').mockResolvedValue(1);
+      jest.spyOn(PostCache.prototype, 'getTotalPostsInCache').mockResolvedValue(1);
 
       await Get.prototype.posts(req, res);
       expect(PostCache.prototype.getPostsFromCache).toHaveBeenCalledWith('post', 0, 10);
@@ -40,7 +40,7 @@ describe('Get', () => {
       const req: Request = postMockRequest(newPost, authUserPayload, { page: '1' }) as Request;
       const res: Response = postMockResponse();
       jest.spyOn(PostCache.prototype, 'getPostsFromCache').mockResolvedValue([]);
-      jest.spyOn(PostCache.prototype, 'getTotalPostsFromCache').mockResolvedValue(0);
+      jest.spyOn(PostCache.prototype, 'getTotalPostsInCache').mockResolvedValue(0);
       jest.spyOn(postService, 'getPosts').mockResolvedValue([postMockData]);
       jest.spyOn(postService, 'postsCount').mockResolvedValue(1);
 
@@ -58,7 +58,7 @@ describe('Get', () => {
       const req: Request = postMockRequest(newPost, authUserPayload, { page: '1' }) as Request;
       const res: Response = postMockResponse();
       jest.spyOn(PostCache.prototype, 'getPostsFromCache').mockResolvedValue([]);
-      jest.spyOn(PostCache.prototype, 'getTotalPostsFromCache').mockResolvedValue(0);
+      jest.spyOn(PostCache.prototype, 'getTotalPostsInCache').mockResolvedValue(0);
       jest.spyOn(postService, 'getPosts').mockResolvedValue([]);
       jest.spyOn(postService, 'postsCount').mockResolvedValue(0);
 

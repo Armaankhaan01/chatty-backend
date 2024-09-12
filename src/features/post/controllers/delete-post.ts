@@ -7,7 +7,7 @@ import { postQueue } from '@services/queues/post.queue';
 const postCache: PostCache = new PostCache();
 
 export class Delete {
-  public async post(req: Request, res: Response): Promise<void> {
+  public async posts(req: Request, res: Response): Promise<void> {
     const { postId } = req.params;
     socketIOPostObject.emit('delete post', postId);
 

@@ -35,7 +35,7 @@ describe('Delete', () => {
     jest.spyOn(PostCache.prototype, 'deletePostFromCache');
     jest.spyOn(postQueue, 'addPostJob');
 
-    await Delete.prototype.post(req, res);
+    await Delete.prototype.posts(req, res);
     expect(postServer.socketIOPostObject.emit).toHaveBeenCalledWith('delete post', req.params.postId);
     expect(PostCache.prototype.deletePostFromCache).toHaveBeenCalledWith(req.params.postId, `${req.currentUser?.userId}`);
     expect(postQueue.addPostJob).toHaveBeenCalledWith('deletePostFromDB', { keyOne: req.params.postId, keyTwo: req.currentUser?.userId });

@@ -9,7 +9,7 @@
     "lint:fix": "eslint --fix",
     "prettier:check": "prettier --check 'src/**/*.{js,ts,css,scss,json}'",
     "prettier:fix": "prettier --write 'src/**/*.{js,ts,css,scss,json}'",
-    "test": "jest --coverage=true -w=1 --forceExit --watchAll=true",
+    "test": "jest --coverage=true -w=1 --forceExit --watchAll=true --detectOpenHandles=true",
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json"
   },
   "keywords": [],
