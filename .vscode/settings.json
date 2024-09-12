@@ -5,12 +5,18 @@
         "cloudinary",
         "currentuser",
         "HGETALL",
+        "HINCRBY",
+        "HMGET",
         "ipaddress",
         "lcov",
         "SENDGRID",
         "signout",
         "tseslint",
         "ttsc",
-        "ZADD"
+        "ZADD",
+        "ZCARD",
+        "ZCOUNT",
+        "ZRANGE",
+        "ZREM"
     ]
 }
