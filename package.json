@@ -4,7 +4,7 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon ./build/app.js | bunyan",
-    "dev": "nodemon -r tsconfig-paths/register src/app.ts | bunyan",
+    "dev": "set NODE_OPTIONS=--trace-deprecation && nodemon -r tsconfig-paths/register src/app.ts | bunyan",
     "lint:check": "eslint",
     "lint:fix": "eslint --fix",
     "prettier:check": "prettier --check 'src/**/*.{js,ts,css,scss,json}'",

@@ -1,0 +1,27 @@
+@baseUrl = http://localhost:5000
+@urlPath = api/v1
+
+
+###
+POST {{baseUrl}}/{{urlPath}}/post/reaction
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "userTo":"66c72cab4179064f296d3934",
+  "postId":"66f69fdbadbb7b5fcd170b7c",
+  "type":"happy",
+  "previousReaction":"",
+  "profilePicture":"https://res.cloudinary.com/dpey3zzge/image/upload/v1724329136/66c72cab4179064f296d3934"
+}
+
+
+
+###
+DELETE {{baseUrl}}/{{urlPath}}/post/reaction/66f69fdbadbb7b5fcd170b7c/happy
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{}

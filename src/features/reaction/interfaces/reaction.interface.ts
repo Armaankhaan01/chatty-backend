@@ -5,7 +5,7 @@ export interface IReactionDocument extends Document {
   _id?: string | ObjectId;
   username: string;
   avatarColor: string;
-  type: string;
+  type?: string;
   postId: string;
   profilePicture: string;
   createdAt?: Date;
@@ -20,6 +20,7 @@ export interface IReactions {
   wow: number;
   sad: number;
   angry: number;
+  [key: string]: number;
 }
 
 export interface IReactionJob {
