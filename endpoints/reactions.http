@@ -25,3 +25,28 @@ Accept: application/json
 withCredentials: true
 
 {}
+###
+GET {{baseUrl}}/{{urlPath}}/post/reactions/66f69fdbadbb7b5fcd170b7c
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{}
+
+
+###
+GET {{baseUrl}}/{{urlPath}}/post/single/reaction/username/Test4/66f69fdbadbb7b5fcd170b7c/
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{}
+
+
+###
+GET {{baseUrl}}/{{urlPath}}/post/reactions/username/Test5
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{}
