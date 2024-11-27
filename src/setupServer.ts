@@ -79,8 +79,8 @@ export class ChattyServer {
       }
       res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
         status: 'error',
-        message: 'Something went wrong!',
-    });
+        message: 'Something went wrong!'
+      });
       next();
     });
   }

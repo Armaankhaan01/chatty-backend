@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
 import { authUserPayload } from '@root/mocks/auth.mock';
 import { reactionMockRequest, reactionMockResponse } from '@root/mocks/reactions.mock';
-import { CommentCache } from '@service/redis/comment.cache';
-import { commentQueue } from '@service/queues/comment.queue';
+import { CommentCache } from '@services/redis/comment.cache';
+import { commentQueue } from '@services/queues/comment.queue';
 import { Add } from '@comment/controllers/add-comment';
 import { existingUser } from '@root/mocks/user.mock';
 
 jest.useFakeTimers();
-jest.mock('@service/queues/base.queue');
-jest.mock('@service/redis/comment.cache');
+jest.mock('@services/queues/base.queue');
+jest.mock('@services/redis/comment.cache');
 
 describe('Add', () => {
   beforeEach(() => {

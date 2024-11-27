@@ -25,7 +25,7 @@
       "@post/*": ["src/features/post/*"],
       "@user/*": ["src/features/user/*"],
       "@reaction/*": ["src/features/reaction/*"],
-      "@comment/*": ["src/features/comments/*"],
+      "@comment/*": ["src/features/comment/*"],
       "@globals/*": ["src/shared/globals/*"],
       "@services/*": ["src/shared/services/*"],
       "@middlewares/*": ["src/shared/middlewares/*"],

@@ -3,12 +3,12 @@ import { BaseCache } from './base.cache';
 import { config } from '@root/config';
 import { ServerError } from '@globals/helpers/error-handler';
 import { Helpers } from '@globals/helpers/helpers';
-import { ICommentDocument, ICommentNameList } from '@root/features/comments/interfaces/comment.interface';
+import { ICommentDocument, ICommentNameList } from '@root/features/comment/interfaces/comment.interface';
 import { find } from 'lodash';
 
 const log: Logger = config.createLogger('commentsCache');
 
-export class ReactionCache extends BaseCache {
+export class CommentCache extends BaseCache {
   constructor() {
     super('commentsCache');
   }

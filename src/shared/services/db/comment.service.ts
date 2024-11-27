@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { IPostDocument } from '@post/interfaces/post.interface';
 import { PostModel } from '@post/models/post.schema';
-import { ICommentDocument, ICommentJob, ICommentNameList, IQueryComment } from '@comment/interfaces/comment.interface';
-import { CommentsModel } from '@root/features/comments/schemes/comment.schema';
+import { ICommentDocument, ICommentJob, ICommentNameList, IQueryComment } from '@root/features/comment/interfaces/comment.interface';
+import { CommentsModel } from '@comment/models/comment.schema';
 import { UserCache } from '@services/redis/user.cache';
 import { IUserDocument } from '@user/interfaces/user.interface';
 import { Query } from 'mongoose';
@@ -12,7 +12,7 @@ const userCache: UserCache = new UserCache();
 class CommentService {
   public async addCommentToDB(commentData: ICommentJob): Promise<void> {
     const { postId, userTo, userFrom, comment, username } = commentData;
-    const comments: Promise<ICommentDocument> = await CommentsModel.create(comment);
+    const comments: Promise<ICommentDocument> = CommentsModel.create(comment);
     const post = PostModel.findOneAndUpdate({ _id: postId }, { $inc: { commentsCount: 1 } }, { new: true }) as Query<
       IPostDocument,
       IPostDocument

@@ -2,13 +2,13 @@ import mongoose from 'mongoose';
 import { Request, Response } from 'express';
 import { authUserPayload } from '@root/mocks/auth.mock';
 import { commentNames, commentsData, reactionMockRequest, reactionMockResponse } from '@root/mocks/reactions.mock';
-import { CommentCache } from '@service/redis/comment.cache';
+import { CommentCache } from '@services/redis/comment.cache';
 import { Get } from '@comment/controllers/get-comments';
-import { commentService } from '@service/db/comment.service';
+import { commentService } from '@services/db/comment.service';
 
 jest.useFakeTimers();
-jest.mock('@service/queues/base.queue');
-jest.mock('@service/redis/comment.cache');
+jest.mock('@services/queues/base.queue');
+jest.mock('@services/redis/comment.cache');
 
 describe('Get', () => {
   beforeEach(() => {
