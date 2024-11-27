@@ -84,14 +84,38 @@ export class UserCache extends BaseCache {
       `${bgImageId}`
     ];
 
-    const dataToSave: string[] = [...firstList, ...secondList, ...thirdList];
+    const dataToSave = {
+      _id: `${_id}`,
+      uId: `${uId}`,
+      username: `${username}`,
+      email: `${email}`,
+      avatarColor: `${avatarColor}`,
+      postsCount: `${postsCount}`,
+      createdAt: `${createdAt}`,
+      blocked: JSON.stringify(blocked),
+      blockedBy: JSON.stringify(blockedBy),
+      profilePicture: `${profilePicture}`,
+      followersCount: `${followersCount}`,
+      followingCount: `${followingCount}`,
+      notifications: JSON.stringify(notifications),
+      social: JSON.stringify(social),
+      work: `${work}`,
+      location: `${location}`,
+      school: `${school}`,
+      quote: `${quote}`,
+      bgImageVersion: `${bgImageVersion}`,
+      bgImageId: `${bgImageId}`
+    };
+
     log.info(dataToSave);
     try {
       if (!this.client.isOpen) {
         await this.client.connect();
       }
       await this.client.ZADD('user', { score: parseInt(userUId, 10), value: `${key}` });
-      await this.client.HSET(`users:${key}`, dataToSave);
+      for (const [itemKey, itemValue] of Object.entries(dataToSave)) {
+        this.client.HSET(`users:${key}`, `${itemKey}`, `${itemValue}`);
+      }
     } catch (error) {
       log.error(error);
       throw new ServerError('Server Error. Try Again.');
