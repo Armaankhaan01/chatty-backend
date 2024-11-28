@@ -25,6 +25,7 @@ const config = {
     '@user/(.*)': ['<rootDir>/src/features/user/$1'],
     '@reaction/(.*)': ['<rootDir>/src/features/reaction/$1'],
     '@comment/(.*)': ['<rootDir>/src/features/comment/$1'],
+    '@follower/(.*)': ['<rootDir>/src/features/followers/$1'],
     '@globals/(.*)': ['<rootDir>/src/shared/globals/$1'],
     '@services/(.*)': ['<rootDir>/src/shared/services/$1'],
     '@middlewares/(.*)': ['<rootDir>/src/shared/middlewares/$1'],
