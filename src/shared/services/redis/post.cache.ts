@@ -112,7 +112,7 @@ export class PostCache extends BaseCache {
       if (!this.client.isOpen) {
         await this.client.connect();
       }
-      const count: number = await this.client.ZCARD('post');
+      const count: number = await this.client.ZCARD('posts:post');
       return count;
     } catch (error) {
       log.error(error);
@@ -207,7 +207,7 @@ export class PostCache extends BaseCache {
       if (!this.client.isOpen) {
         await this.client.connect();
       }
-      const count: number = await this.client.ZCOUNT('post', uId, uId);
+      const count: number = await this.client.ZCOUNT('posts:post', uId, uId);
       return count;
     } catch (error) {
       log.error(error);
@@ -222,7 +222,7 @@ export class PostCache extends BaseCache {
       }
       const postCount: string[] = await this.client.HMGET(`users:${currentUserId}`, 'postsCount');
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
-      multi.ZREM('post', `${key}`);
+      multi.ZREM('posts:post', `${key}`);
       multi.DEL(`posts:${key}`);
       multi.DEL(`comments:${key}`);
       multi.DEL(`reactions:${key}`);
