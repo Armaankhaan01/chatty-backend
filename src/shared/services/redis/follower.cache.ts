@@ -41,7 +41,6 @@ export class FollowerCache extends BaseCache {
       throw new ServerError('Server error. Try again.');
     }
   }
-  
 
   public async updateFollowersCountInCache(userId: string, prop: string, value: number): Promise<void> {
     try {
