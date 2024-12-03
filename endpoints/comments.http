@@ -10,9 +10,9 @@ Accept: application/json
 withCredentials: true
 
 {
-  "userTo":"66c72cab4179064f296d3934",
-  "postId":"66f69fdbadbb7b5fcd170b7c",
-  "comment":"This is my Second comment",
+  "userTo":"674d875fbba72b7a845dc901",
+  "postId":"674d8883b6d23b1cdfd37d60",
+  "comment":"This is my second comment",
   "profilePicture":"https://res.cloudinary.com/dpey3zzge/image/upload/v1724329136/66c72cab4179064f296d3934"
 }
 
@@ -30,7 +30,8 @@ withCredentials: true
 
 
 ###
-GET  {{baseUrl}}/{{urlPath}}/post/single/comment/66f69fdbadbb7b5fcd170b7c/67480d5376e2d43824b5862b
+
+GET  {{baseUrl}}/{{urlPath}}/post/single/comment/66f69fdbadbb7b5fcd170b7c/67480d8776e2d43824b5862f
 Content-Type: application/json
 Accept: application/json
 withCredentials: true

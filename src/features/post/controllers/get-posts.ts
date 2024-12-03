@@ -17,7 +17,7 @@ export class Get {
 
     let posts: IPostDocument[] = [];
     let totalPosts = 0;
-    const cachedPosts: IPostDocument[] = await postCache.getPostsFromCache('post', newSkip, limit);
+    const cachedPosts: IPostDocument[] = await postCache.getPostsFromCache('posts:post', newSkip, limit);
     if (cachedPosts.length > 0) {
       posts = cachedPosts;
       totalPosts = await postCache.getTotalPostsInCache();
@@ -35,7 +35,7 @@ export class Get {
     const newSkip: number = skip === 0 ? skip : skip + 1;
 
     let posts: IPostDocument[] = [];
-    const cachedPosts: IPostDocument[] = await postCache.getPostsWithImagesFromCache('post', newSkip, limit);
+    const cachedPosts: IPostDocument[] = await postCache.getPostsWithImagesFromCache('posts:post', newSkip, limit);
     posts = cachedPosts.length ? cachedPosts : await postService.getPosts({ imgId: '$ne', gifUrl: '$ne' }, skip, limit, { createdAt: -1 });
     res.status(HTTP_STATUS.OK).json({ message: 'All posts with images', posts });
   }

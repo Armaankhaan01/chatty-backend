@@ -22,7 +22,7 @@ export class CommentCache extends BaseCache {
       const commentsCount: string[] = await this.client.HMGET(`posts:${postId}`, 'commentsCount');
       let count: number = Helpers.parseJson(commentsCount[0]) as number;
       count += 1;
-      await this.client.hSet(`posts${postId}`, 'commentsCount', `${count}`);
+      await this.client.hSet(`posts:${postId}`, 'commentsCount', `${count}`);
     } catch (error) {
       log.error(error);
       throw new ServerError('Server error. Try again.');

@@ -26,6 +26,7 @@
       "@user/*": ["src/features/user/*"],
       "@reaction/*": ["src/features/reaction/*"],
       "@comment/*": ["src/features/comment/*"],
+      "@follower/*": ["src/features/followers/*"],
       "@globals/*": ["src/shared/globals/*"],
       "@services/*": ["src/shared/services/*"],
       "@middlewares/*": ["src/shared/middlewares/*"],
