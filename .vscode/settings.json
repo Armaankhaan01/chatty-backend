@@ -6,6 +6,7 @@
         "currentuser",
         "Followee",
         "followeeId",
+        "Followees",
         "HGETALL",
         "HINCRBY",
         "HMGET",
