@@ -19,7 +19,7 @@ import { SocketIOFollowerHandler } from '@sockets/follower.socket';
 import { SocketIOUserHandler } from '@sockets/user.socket';
 import { SocketIONotificationHandler } from '@sockets/notification.socket';
 
-const SERVER_PORT = 5000;
+const SERVER_PORT = process.env.PORT || 5000;
 const log: Logger = config.createLogger('setupServer');
 
 export class ChattyServer {
