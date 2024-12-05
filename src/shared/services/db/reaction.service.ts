@@ -8,10 +8,10 @@ import { IUserDocument } from '@user/interfaces/user.interface';
 import { omit } from 'lodash';
 import mongoose from 'mongoose';
 import { INotificationDocument, INotificationTemplate } from '@notification/interfaces/notification.interface';
-import { NotificationModel } from '@notification/models/notification.schema';
 import { socketIONotificationObject } from '@sockets/notification.socket';
 import { notificationTemplate } from '@services/emails/templates/notifications/notification-template';
 import { emailQueue } from '@services/queues/email.queue';
+import { NotificationModel } from '@notification/models/notification.schema';
 
 const userCache: UserCache = new UserCache();
 
