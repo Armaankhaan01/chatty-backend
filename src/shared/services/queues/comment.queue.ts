@@ -1,4 +1,4 @@
-import { ICommentJob } from '@root/features/comment/interfaces/comment.interface';
+import { ICommentJob } from '@comment/interfaces/comment.interface';
 import { BaseQueue } from './base.queue';
 import { commentWorker } from '@workers/comment.worker';
 

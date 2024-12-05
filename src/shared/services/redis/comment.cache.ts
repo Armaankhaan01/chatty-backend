@@ -1,10 +1,10 @@
+import { BaseCache } from '@services/redis/base.cache';
 import Logger from 'bunyan';
-import { BaseCache } from './base.cache';
 import { config } from '@root/config';
 import { ServerError } from '@globals/helpers/error-handler';
 import { Helpers } from '@globals/helpers/helpers';
-import { ICommentDocument, ICommentNameList } from '@root/features/comment/interfaces/comment.interface';
 import { find } from 'lodash';
+import { ICommentDocument, ICommentNameList } from '@comment/interfaces/comment.interface';
 
 const log: Logger = config.createLogger('commentsCache');
 
@@ -18,11 +18,11 @@ export class CommentCache extends BaseCache {
       if (!this.client.isOpen) {
         await this.client.connect();
       }
-      await this.client.lPush(`comments:${postId}`, value);
+      await this.client.LPUSH(`comments:${postId}`, value);
       const commentsCount: string[] = await this.client.HMGET(`posts:${postId}`, 'commentsCount');
       let count: number = Helpers.parseJson(commentsCount[0]) as number;
       count += 1;
-      await this.client.hSet(`posts:${postId}`, 'commentsCount', `${count}`);
+      await this.client.HSET(`posts:${postId}`, 'commentsCount', `${count}`);
     } catch (error) {
       log.error(error);
       throw new ServerError('Server error. Try again.');
@@ -34,7 +34,7 @@ export class CommentCache extends BaseCache {
       if (!this.client.isOpen) {
         await this.client.connect();
       }
-      const reply: string[] = await this.client.lRange(`comments:${postId}`, 0, -1);
+      const reply: string[] = await this.client.LRANGE(`comments:${postId}`, 0, -1);
       const list: ICommentDocument[] = [];
       for (const item of reply) {
         list.push(Helpers.parseJson(item));
@@ -51,15 +51,17 @@ export class CommentCache extends BaseCache {
       if (!this.client.isOpen) {
         await this.client.connect();
       }
-      const commentsCount: number = await this.client.lLen(`comments:${postId}`);
-      const comments: string[] = await this.client.lRange(`comments:${postId}`, 0, -1);
+      const commentsCount: number = await this.client.LLEN(`comments:${postId}`);
+      const comments: string[] = await this.client.LRANGE(`comments:${postId}`, 0, -1);
       const list: string[] = [];
       for (const item of comments) {
         const comment: ICommentDocument = Helpers.parseJson(item) as ICommentDocument;
         list.push(comment.username);
       }
-
-      const response: ICommentNameList = { count: commentsCount, names: list };
+      const response: ICommentNameList = {
+        count: commentsCount,
+        names: list
+      };
       return [response];
     } catch (error) {
       log.error(error);
@@ -72,15 +74,15 @@ export class CommentCache extends BaseCache {
       if (!this.client.isOpen) {
         await this.client.connect();
       }
-      const comments: string[] = await this.client.lRange(`comments:${postId}`, 0, -1);
+      const comments: string[] = await this.client.LRANGE(`comments:${postId}`, 0, -1);
       const list: ICommentDocument[] = [];
       for (const item of comments) {
         list.push(Helpers.parseJson(item));
       }
-
       const result: ICommentDocument = find(list, (listItem: ICommentDocument) => {
         return listItem._id === commentId;
       }) as ICommentDocument;
+
       return [result];
     } catch (error) {
       log.error(error);

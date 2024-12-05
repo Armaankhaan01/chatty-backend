@@ -8,9 +8,9 @@ Accept: application/json
 withCredentials: true
 
 {
-  "post":"this is my private post 1",
+  "post":"this is my public post 1",
   "bgColor":"red",
-  "privacy":"Private",
+  "privacy":"public",
   "gifUrl":"https://media.giphy.com/media/tHIRLHtNwxpjIFqPdV/giphy.gif?cid=790b7611irdrnjwpdd85e8ci9stfbjsilf8n44oiqz66sldy&ep=v1_gifs_trending&rid=giphy.gif&ct=g",
   "feelings":"happy",
   "profilePicture":"https://res.cloudinary.com/dpey3zzge/image/upload/v1724329136/66c72cab4179064f296d3934"
