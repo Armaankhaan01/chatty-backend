@@ -41,7 +41,10 @@ class FollowerService {
       }
     ]);
 
-    const response: [mongoose.mongo.BulkWriteResult, IUserDocument | null] = await Promise.all([users, userCache.getUserFromCache(followeeId)]);
+    const response: [mongoose.mongo.BulkWriteResult, IUserDocument | null] = await Promise.all([
+      users,
+      userCache.getUserFromCache(followeeId)
+    ]);
 
     if (response[1]?.notifications.follows && userId !== followeeId) {
       const notificationModel: INotificationDocument = new NotificationModel();

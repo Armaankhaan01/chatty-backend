@@ -84,5 +84,4 @@ describe('SignIn', () => {
       expect(error.serializeErrors().message).toEqual('Invalid Credentials');
     });
   });
-
 });

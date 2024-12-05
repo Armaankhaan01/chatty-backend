@@ -265,7 +265,7 @@ export class PostCache extends BaseCache {
       postReply.commentsCount = Helpers.parseJson(`${postReply.commentsCount}`) as number;
       postReply.reactions = Helpers.parseJson(`${postReply.reactions}`) as IReactions;
       postReply.createdAt = new Date(Helpers.parseJson(`${postReply.createdAt}`)) as Date;
-      log.info({...postReply});
+      log.info({ ...postReply });
       return { ...postReply } as IPostDocument;
     } catch (error) {
       log.error(error);
