@@ -9,7 +9,7 @@ import { IPostDocument } from '@post/interfaces/post.interface';
 import { UploadApiResponse } from 'cloudinary';
 import { uploads, videoUpload } from '@globals/helpers/cloudinary-upload';
 import { BadRequestError } from '@globals/helpers/error-handler';
-// import { imageQueue } from '@services/queues/image.queue';
+import { imageQueue } from '@services/queues/image.queue';
 
 const postCache: PostCache = new PostCache();
 
@@ -112,13 +112,13 @@ export class Update {
     socketIOPostObject.emit('update post', postUpdated, 'posts');
     postQueue.addPostJob('updatePostInDB', { key: postId, value: postUpdated });
 
-    // if (image) {
-    //   imageQueue.addImageJob('addImageToDB', {
-    //     key: `${req.currentUser!.userId}`,
-    //     imgId: result.public_id,
-    //     imgVersion: result.version.toString()
-    //   });
-    // }
+    if (image) {
+      imageQueue.addImageJob('addImageToDB', {
+        key: `${req.currentUser!.userId}`,
+        imgId: result.public_id,
+        imgVersion: result.version.toString()
+      });
+    }
     return result;
   }
 }

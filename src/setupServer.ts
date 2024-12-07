@@ -18,6 +18,7 @@ import { SocketIOPostHandler } from '@sockets/post.socket';
 import { SocketIOFollowerHandler } from '@sockets/follower.socket';
 import { SocketIOUserHandler } from '@sockets/user.socket';
 import { SocketIONotificationHandler } from '@sockets/notification.socket';
+import { SocketIOImageHandler } from '@sockets/image.socket';
 
 const SERVER_PORT = process.env.PORT || 5000;
 const log: Logger = config.createLogger('setupServer');
@@ -125,10 +126,12 @@ export class ChattyServer {
     const followerSocketHandler: SocketIOFollowerHandler = new SocketIOFollowerHandler(io);
     const userSocketHandler: SocketIOUserHandler = new SocketIOUserHandler(io);
     const notificationSocketHandler: SocketIONotificationHandler = new SocketIONotificationHandler();
+    const imageSocketHandler: SocketIOImageHandler = new SocketIOImageHandler();
     postSocketHandler.listen();
     followerSocketHandler.listen();
     userSocketHandler.listen();
     notificationSocketHandler.listen(io);
+    imageSocketHandler.listen(io);
   }
 }
 

@@ -28,6 +28,7 @@
       "@comment/*": ["src/features/comment/*"],
       "@follower/*": ["src/features/followers/*"],
       "@notification/*": ["src/features/notifications/*"],
+      "@image/*": ["src/features/images/*"],
       "@globals/*": ["src/shared/globals/*"],
       "@services/*": ["src/shared/services/*"],
       "@middlewares/*": ["src/shared/middlewares/*"],

@@ -10,6 +10,7 @@ import { postQueue } from '@services/queues/post.queue';
 import { uploads } from '@globals/helpers/cloudinary-upload';
 import { UploadApiResponse } from 'cloudinary';
 import { BadRequestError } from '@globals/helpers/error-handler';
+import { imageQueue } from '@services/queues/image.queue';
 
 const postCache: PostCache = new PostCache();
 
@@ -56,7 +57,6 @@ export class Create {
 
     postQueue.addPostJob('addPostToDB', { value: createdPost, key: req.currentUser!.userId });
     res.status(HTTP_STATUS.CREATED).json({ message: 'Post created successfully' });
-    // const { postId, bgColor: userColor, profilePicture: userPicture, notifications } = await PostService.createPost();
   }
 
   @joiValidation(postWithImageSchema)
@@ -106,7 +106,11 @@ export class Create {
 
     postQueue.addPostJob('addPostToDB', { value: createdPost, key: req.currentUser!.userId });
 
-    // Todo: call image queue to add image to mongodb database
+    imageQueue.addImageJob('addImageToDB', {
+      key: `${req.currentUser!.userId}`,
+      imgId: result.public_id,
+      imgVersion: result.version.toString()
+    });
 
     res.status(HTTP_STATUS.CREATED).json({ message: 'Post created with Image successfully' });
   }

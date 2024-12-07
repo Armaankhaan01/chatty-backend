@@ -23,5 +23,7 @@
         "ZCOUNT",
         "ZRANGE",
         "ZREM"
-    ]
+    ],
+    "IDX.aI.enableInlineCompletion": true,
+    "IDX.aI.enableCodebaseIndexing": true
 }
