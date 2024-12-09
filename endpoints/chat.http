@@ -1,0 +1,89 @@
+@baseUrl = http://localhost:5000
+@urlPath = api/v1
+
+
+###
+GET {{baseUrl}}/{{urlPath}}/chat/message/conversation-list
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+GET {{baseUrl}}/{{urlPath}}/chat/message/user/6756fb547511203e96e9c01c
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+
+###
+POST {{baseUrl}}/{{urlPath}}/chat/message
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "conversationId": "6756fba37511203e96e9c027",
+  "receiverId": "6751ed5c58444954b7b708c6",
+  "receiverUsername": "Test3",
+  "receiverAvatarColor": "red",
+  "receiverProfilePicture": "https://res.cloudinary.com/dpey3zzge/image/upload/v1733422313/6751ece858444954b7b708b5",
+  "body": "This is the last last last Message from test1 to test3",
+  "gifUrl": "",
+  "isRead": false,
+  "selectedImage": ""
+}
+
+###
+POST {{baseUrl}}/{{urlPath}}/chat/message/add-chat-users
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "userOne": "6751ece858444954b7b708b5",
+  "userTwo": "6751ece958444954b7b708b8"
+}
+
+###
+POST {{baseUrl}}/{{urlPath}}/chat/message/remove-chat-users
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "userOne": "6751ece858444954b7b708b5",
+  "userTwo": "6751ed5c58444954b7b708c7"
+}
+
+###
+PUT {{baseUrl}}/{{urlPath}}/chat/message/mark-as-read
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "senderId": "6751ece858444954b7b708b5",
+  "receiverId": "6751ed5c58444954b7b708c6"
+}
+
+###
+PUT {{baseUrl}}/{{urlPath}}/chat/message/reaction
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+# For this endpoint, the type is either add or remove
+{
+  "conversationId": "6756fb547511203e96e9c01c",
+  "messageId": "6756fb547511203e96e9c01b",
+  "reaction": "sad",
+  "type": "add"
+}
+
+
+###
+DELETE {{baseUrl}}/{{urlPath}}/chat/message/mark-as-deleted/6756fb6b7511203e96e9c022/6751ece858444954b7b708b5/6751ece958444954b7b708b8/deleteForMe
+# For this endpoint, the type is either deleteForMe or deleteForEveryone
+Content-Type: application/json
+Accept: application/json
+withCredentials: true

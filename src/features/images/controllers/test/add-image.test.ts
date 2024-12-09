@@ -14,7 +14,7 @@ import * as cloudinaryUploads from '@globals/helpers/cloudinary-upload';
 jest.useFakeTimers();
 jest.mock('@services/queues/base.queue');
 jest.mock('@services/redis/user.cache');
-jest.mock('@sockets/user');
+jest.mock('@sockets/user.socket');
 jest.mock('@globals/helpers/cloudinary-upload');
 
 Object.defineProperties(imageServer, {
@@ -55,7 +55,7 @@ describe('Add', () => {
       jest.spyOn(imageServer.socketIOImageObject, 'emit');
       jest.spyOn(cloudinaryUploads, 'uploads').mockImplementation((): any => Promise.resolve({ version: '1234', public_id: '123456' }));
 
-      const url = 'https://res.cloudinary.com/dyamr9ym3/image/upload/v1234/123456';
+      const url = 'https://res.cloudinary.com/dpey3zzge/image/upload/v1234/123456';
 
       await Add.prototype.profileImage(req, res);
       expect(UserCache.prototype.updateSingleUserItemInCache).toHaveBeenCalledWith(`${req.currentUser?.userId}`, 'profilePicture', url);
@@ -75,7 +75,7 @@ describe('Add', () => {
       await Add.prototype.profileImage(req, res);
       expect(imageQueue.addImageJob).toHaveBeenCalledWith('addUserProfileImageToDB', {
         key: `${req.currentUser?.userId}`,
-        value: 'https://res.cloudinary.com/dyamr9ym3/image/upload/v1234/123456',
+        value: 'https://res.cloudinary.com/dpey3zzge/image/upload/v1234/123456',
         imgId: '123456',
         imgVersion: '1234'
       });
@@ -103,7 +103,7 @@ describe('Add', () => {
     it('should not upload existing image', async () => {
       const req: Request = imagesMockRequest(
         {},
-        { image: 'https://res.cloudinary.com/dyamr9ym3/image/upload/v1234/123456' },
+        { image: 'https://res.cloudinary.com/dpey3zzge/image/upload/v1234/123456' },
         authUserPayload
       ) as Request;
       const res: Response = imagesMockResponse();
