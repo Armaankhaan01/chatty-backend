@@ -35,7 +35,7 @@ class ChatService {
     });
   }
 
-  public async  getUserConversationList(userId: ObjectId): Promise<IMessageData[]> {
+  public async getUserConversationList(userId: ObjectId): Promise<IMessageData[]> {
     const messages: IMessageData[] = await MessageModel.aggregate([
       { $match: { $or: [{ senderId: userId }, { receiverId: userId }] } },
       {
