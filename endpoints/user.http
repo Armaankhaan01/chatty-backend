@@ -26,3 +26,11 @@ GET {{baseUrl}}/{{urlPath}}/user/profile/posts/test1/6751ece858444954b7b708b5/88
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
+
+
+###
+GET {{baseUrl}}/{{urlPath}}/user/profile/user/suggestions
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
