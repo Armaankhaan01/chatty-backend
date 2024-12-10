@@ -15,6 +15,7 @@ withCredentials: true
   "feelings":"happy",
   "profilePicture":"https://res.cloudinary.com/dpey3zzge/image/upload/v1724329136/66c72cab4179064f296d3934"
 }
+
 ###
 POST {{baseUrl}}/{{urlPath}}/post/image/post
 Content-Type: application/json
