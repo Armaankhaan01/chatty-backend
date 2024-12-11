@@ -20,7 +20,7 @@ class ReactionService {
     const { postId, userTo, userFrom, username, type, previousReaction, reactionObject } = reactionData;
     let updatedReactionObject: IReactionDocument = reactionObject as IReactionDocument;
     if (previousReaction) {
-      updatedReactionObject = omit(reactionObject, ['_id']);
+      updatedReactionObject = omit(reactionObject, ['_id']) as IReactionDocument;
     }
     const updatedReaction: [IUserDocument, IReactionDocument, IPostDocument] = (await Promise.all([
       userCache.getUserFromCache(`${userTo}`),

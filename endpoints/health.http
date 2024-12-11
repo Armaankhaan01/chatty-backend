@@ -13,7 +13,7 @@ Accept: application/json
 withCredentials: true
 
 ###
-GET {{baseUrl}}/fibo/30
+GET {{baseUrl}}/fibo/45
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
