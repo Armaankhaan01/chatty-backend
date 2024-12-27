@@ -2,6 +2,33 @@
     "cSpell.words": [
         "camelcase",
         "chattyapp",
-        "tseslint"
-    ]
+        "cloudinary",
+        "currentuser",
+        "Followee",
+        "followeeId",
+        "Followees",
+        "HGETALL",
+        "HINCRBY",
+        "HMGET",
+        "ipaddress",
+        "lcov",
+        "LINDEX",
+        "LRANGE",
+        "LREM",
+        "LSET",
+        "RPUSH",
+        "SENDGRID",
+        "signout",
+        "tseslint",
+        "ttsc",
+        "unfollow",
+        "Unfollowed",
+        "ZADD",
+        "ZCARD",
+        "ZCOUNT",
+        "ZRANGE",
+        "ZREM"
+    ],
+    "IDX.aI.enableInlineCompletion": true,
+    "IDX.aI.enableCodebaseIndexing": true
 }
