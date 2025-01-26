@@ -1,7 +1,9 @@
 version: '3.9'
 services:
   chatty-backend:
-    image: armaankhaan01/chatty-backend:latest
+    build:
+      context: . # Use the Dockerfile in the current directory
+      dockerfile: Dockerfile
     ports:
       - '5000:5000'
     depends_on:
@@ -12,7 +14,7 @@ services:
   redis:
     image: redis:7
     ports:
-      - '6370:6379' # Port mapping (ensure the backend uses this port)
+      - '6379:6379' # Port mapping (ensure the backend uses this port)
     volumes:
       - ${REDIS_DATA:-./redis_data}:/data # Default value if REDIS_DATA isn't set
     restart: always # Added restart policy for Redis to ensure it restarts automatically

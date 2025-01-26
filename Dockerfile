@@ -19,14 +19,12 @@ RUN npm install -g pm2
 # Copy the application code to the container
 COPY . .
 
-# Run Gulp build tasks (Clean, TypeScript, Views, and Assets)
-RUN gulp build-clean
-RUN gulp typescript
-RUN gulp views
-RUN gulp assets
+# Run Gulp build tasks (Views)
+RUN npm run build
+RUN gulp
 
 # Expose the port your application runs on
 EXPOSE 5000
 
 # Command to run the application with PM2
-CMD ["pm2-runtime", "start", "ecosystem.config.js"]
+CMD ["npm", "start"]
