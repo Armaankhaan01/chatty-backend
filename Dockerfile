@@ -7,20 +7,26 @@ WORKDIR /usr/src/app
 # Copy package.json and package-lock.json to the container
 COPY package.json package-lock.json ./
 
-# Install dependencies
+# Install dependencies (including gulp, typescript, etc.)
 RUN npm install --legacy-peer-deps
 
-# Install PM2 globally
+# Install Gulp globally
+RUN npm install -g gulp-cli
+
+# Install PM2 globally (for running the app in production)
 RUN npm install -g pm2
 
 # Copy the application code to the container
 COPY . .
 
-# Build the TypeScript project
-RUN npm run build
+# Run Gulp build tasks (Clean, TypeScript, Views, and Assets)
+RUN gulp build-clean
+RUN gulp typescript
+RUN gulp views
+RUN gulp assets
 
 # Expose the port your application runs on
 EXPOSE 5000
 
-# Command to run the application
-CMD ["npm", "run", "start"]
+# Command to run the application with PM2
+CMD ["pm2-runtime", "start", "ecosystem.config.js"]
