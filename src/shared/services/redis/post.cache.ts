@@ -17,7 +17,7 @@ export class PostCache extends BaseCache {
   }
 
   public async savePostToCache(data: ISavePostToCache): Promise<void> {
-    const { key, currentUserId, uId, createdPost } = data;
+    const { key, currentUserId, createdPost } = data;
     const {
       _id,
       userId,
@@ -67,7 +67,8 @@ export class PostCache extends BaseCache {
 
       const postCount: string[] = await this.client.HMGET(`users:${currentUserId}`, 'postsCount');
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
-      await this.client.ZADD('posts:post', { score: parseInt(uId, 10), value: `${key}` });
+      const score = new Date(createdAt || '').getTime() + Math.random();
+      await this.client.ZADD('posts:post', { score, value: `${key}` });
       for (const [itemKey, itemValue] of Object.entries(dataToSave)) {
         multi.HSET(`posts:${key}`, `${itemKey}`, `${itemValue}`);
       }
@@ -148,6 +149,36 @@ export class PostCache extends BaseCache {
     }
   }
 
+  public async getTotalPostWithImagesCount(): Promise<number> {
+    try {
+      if (!this.client.isOpen) {
+        await this.client.connect();
+      }
+
+      const allPostIds: string[] = await this.client.ZRANGE('posts:post', 0, -1, { REV: true });
+      let count = 0;
+      const multi = this.client.multi();
+
+      for (const postId of allPostIds) {
+        multi.HGETALL(`posts:${postId}`);
+      }
+
+      const replies: PostCacheMultiType = (await multi.exec()) as PostCacheMultiType;
+
+      for (const post of replies as IPostDocument[]) {
+        if ((post.imgId && post.imgVersion) || post.gifUrl) {
+          count++;
+        }
+      }
+
+      return count;
+    } catch (error) {
+      log.error(error);
+      throw new ServerError('Server error. Try again.');
+    }
+  }
+
+
   public async getPostsWithVideosFromCache(key: string, start: number, end: number): Promise<IPostDocument[]> {
     try {
       if (!this.client.isOpen) {
@@ -220,8 +251,9 @@ export class PostCache extends BaseCache {
       if (!this.client.isOpen) {
         await this.client.connect();
       }
+
       const postCount: string[] = await this.client.HMGET(`users:${currentUserId}`, 'postsCount');
-      const multi: ReturnType<typeof this.client.multi> = this.client.multi();
+      const multi = this.client.multi();
       multi.ZREM('posts:post', `${key}`);
       multi.DEL(`posts:${key}`);
       multi.DEL(`comments:${key}`);
@@ -233,6 +265,14 @@ export class PostCache extends BaseCache {
       log.error(error);
       throw new ServerError('Server error. Try again.');
     }
+  }
+
+  public async getPostFromCache(key: string): Promise<{ userId: string } | null> {
+    if (!this.client.isOpen) {
+      await this.client.connect();
+    }
+    const postUserId = await this.client.HGET(`posts:${key}`, 'userId');
+    return postUserId ? { userId: postUserId } : null;
   }
 
   public async updatePostInCache(key: string, updatedPost: IPostDocument): Promise<IPostDocument> {

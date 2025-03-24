@@ -1,4 +1,5 @@
 import { authMiddleware } from '@middlewares/auth.middleware';
+import { postMiddleware } from '@middlewares/post.middleware';
 import { Create } from '@post/controllers/create-post';
 import { Delete } from '@post/controllers/delete-post';
 import { Get } from '@post/controllers/get-posts';
@@ -20,11 +21,21 @@ class PostRoutes {
     this.router.post('/post/image/post', authMiddleware.checkAuthentication, Create.prototype.createPostWithImage);
     this.router.post('/post/video/post', authMiddleware.checkAuthentication, Create.prototype.postWithVideo);
 
-    this.router.put('/post/:postId', authMiddleware.checkAuthentication, Update.prototype.posts);
-    this.router.put('/post/image/:postId', authMiddleware.checkAuthentication, Update.prototype.postWithImage);
-    this.router.put('/post/video/:postId', authMiddleware.checkAuthentication, Update.prototype.postWithVideo);
+    this.router.put('/post/:postId', authMiddleware.checkAuthentication, postMiddleware.checkAuthorizedForPost, Update.prototype.posts);
+    this.router.put(
+      '/post/image/:postId',
+      authMiddleware.checkAuthentication,
+      postMiddleware.checkAuthorizedForPost,
+      Update.prototype.postWithImage
+    );
+    this.router.put(
+      '/post/video/:postId',
+      authMiddleware.checkAuthentication,
+      postMiddleware.checkAuthorizedForPost,
+      Update.prototype.postWithVideo
+    );
 
-    this.router.delete('/post/:postId', authMiddleware.checkAuthentication, Delete.prototype.posts);
+    this.router.delete('/post/:postId', authMiddleware.checkAuthentication, postMiddleware.checkAuthorizedForPost, Delete.prototype.posts);
     return this.router;
   }
 }

@@ -67,6 +67,10 @@ class CommentService {
     ]);
     return commentsNamesList;
   }
+
+  public async removeAllCommentsForPost(postId: string): Promise<void> {
+    await CommentsModel.deleteMany({ postId });
+  }
 }
 
 export const commentService: CommentService = new CommentService();

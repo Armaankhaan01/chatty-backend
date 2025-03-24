@@ -29,7 +29,7 @@ export const mockFollowerData: IFollowerData = {
   followersCount: existingUserTwo.followersCount,
   followingCount: existingUserTwo.followingCount,
   profilePicture: `${existingUserTwo.profilePicture}`,
-  postCount: existingUserTwo.postsCount,
+  postsCount: existingUserTwo.postsCount,
   username: `${existingUserTwo.username}`,
   uId: `${existingUserTwo.uId}`,
   _id: new mongoose.Types.ObjectId(existingUserTwo._id)
@@ -39,7 +39,7 @@ export const followerData = {
   _id: '605727cd646cb50e668a4e13',
   followerId: {
     username: 'Manny',
-    postCount: 5,
+    postsCount: 5,
     avatarColor: '#ff9800',
     followersCount: 3,
     followingCount: 5,
@@ -47,7 +47,7 @@ export const followerData = {
   },
   followeeId: {
     username: 'Danny',
-    postCount: 10,
+    postsCount: 10,
     avatarColor: '#ff9800',
     followersCount: 3,
     followingCount: 5,

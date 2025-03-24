@@ -9,8 +9,8 @@ const postCache: PostCache = new PostCache();
 export class Delete {
   public async posts(req: Request, res: Response): Promise<void> {
     const { postId } = req.params;
-    socketIOPostObject.emit('delete post', postId);
 
+    socketIOPostObject.emit('delete post', postId);
     await postCache.deletePostFromCache(postId, `${req.currentUser!.userId}`);
 
     postQueue.addPostJob('deletePostFromDB', {
