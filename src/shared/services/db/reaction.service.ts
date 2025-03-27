@@ -103,6 +103,10 @@ class ReactionService {
     ]);
     return reactions;
   }
+
+  public async removeAllReactionsForPost(postId: string): Promise<void> {
+    await ReactionModel.deleteMany({ postId });
+  }
 }
 
 export const reactionService: ReactionService = new ReactionService();

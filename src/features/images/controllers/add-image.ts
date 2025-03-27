@@ -11,7 +11,6 @@ import { socketIOImageObject } from '@sockets/image.socket';
 import { imageQueue } from '@services/queues/image.queue';
 import { IBgUploadResponse } from '@image/interfaces/image.interface';
 import { Helpers } from '@globals/helpers/helpers';
-import { config } from '@root/config';
 
 const userCache: UserCache = new UserCache();
 
@@ -22,7 +21,7 @@ export class Add {
     if (!result?.public_id) {
       throw new BadRequestError('File upload: Error occurred. Try again.');
     }
-    const url = `https://res.cloudinary.com/${config.CLOUD_NAME}/image/upload/v${result.version}/${result.public_id}`;
+    const url = `https://res.cloudinary.com/dpey3zzge/image/upload/v${result.version}/${result.public_id}`;
     const cachedUser: IUserDocument = (await userCache.updateSingleUserItemInCache(
       `${req.currentUser!.userId}`,
       'profilePicture',

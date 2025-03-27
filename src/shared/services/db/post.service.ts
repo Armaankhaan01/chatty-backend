@@ -3,6 +3,8 @@ import { PostModel } from '@post/models/post.schema';
 import { IUserDocument } from '@user/interfaces/user.interface';
 import { UserModel } from '@user/models/user.schema';
 import { Query, UpdateQuery } from 'mongoose';
+import { commentService } from './comment.service';
+import { reactionService } from './reaction.service';
 
 class PostService {
   public async addPostToDB(userId: string, createdPost: IPostDocument): Promise<void> {
@@ -41,10 +43,12 @@ class PostService {
 
   public async deletePost(postId: string, userId: string): Promise<void> {
     const deletePost: Query<IQueryComplete & IQueryDeleted, IPostDocument> = PostModel.deleteOne({ _id: postId });
-    // TODO delete Reactions and comments
 
     const decrementPostCount: UpdateQuery<IUserDocument> = UserModel.updateOne({ _id: userId }, { $inc: { postsCount: -1 } });
-    await Promise.all([deletePost, decrementPostCount]);
+    const deleteComments = commentService.removeAllCommentsForPost(postId);
+    const deleteReactions = reactionService.removeAllReactionsForPost(postId);
+
+    await Promise.all([deletePost, decrementPostCount, deleteComments, deleteReactions]);
   }
 
   public async editPost(postId: string, updatedPost: IPostDocument): Promise<void> {

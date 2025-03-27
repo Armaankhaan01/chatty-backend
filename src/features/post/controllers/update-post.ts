@@ -7,7 +7,7 @@ import { joiValidation } from '@globals/decorators/joi-validation.decorators';
 import { postSchema, postWithImageSchema, postWithVideoSchema } from '@post/schemes/post.schemes';
 import { IPostDocument } from '@post/interfaces/post.interface';
 import { UploadApiResponse } from 'cloudinary';
-import { uploads, videoUpload } from '@globals/helpers/cloudinary-upload';
+import { deleteFile, uploads, videoUpload } from '@globals/helpers/cloudinary-upload';
 import { BadRequestError } from '@globals/helpers/error-handler';
 import { imageQueue } from '@services/queues/image.queue';
 
@@ -87,14 +87,27 @@ export class Update {
   }
 
   private async addImageToExistingPost(req: Request): Promise<UploadApiResponse> {
-    const { post, bgColor, feelings, privacy, gifUrl, profilePicture, image, video } = req.body;
+    const { post, bgColor, feelings, privacy, gifUrl, profilePicture, image, imgId, video, videoId } = req.body;
     const { postId } = req.params;
-    const result: UploadApiResponse = image
-      ? ((await uploads(image)) as UploadApiResponse)
-      : ((await videoUpload(video)) as UploadApiResponse);
+    let result: UploadApiResponse;
+    if (image && imgId) {
+      result = (await uploads(image, imgId, true, true)) as UploadApiResponse;
+    } else if (video && videoId) {
+      result = (await videoUpload(video, videoId, true, true)) as UploadApiResponse;
+    } else if (video && imgId) {
+      deleteFile(imgId, 'image', true);
+      result = (await videoUpload(video)) as UploadApiResponse;
+    } else if (image && videoId) {
+      deleteFile(videoId, 'video', true);
+      result = (await uploads(image)) as UploadApiResponse;
+    } else {
+      result = image ? ((await uploads(image)) as UploadApiResponse) : ((await videoUpload(video)) as UploadApiResponse);
+    }
+
     if (!result?.public_id) {
       return result;
     }
+
     const updatedPost: IPostDocument = {
       post,
       bgColor,
