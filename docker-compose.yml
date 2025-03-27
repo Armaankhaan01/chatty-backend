@@ -10,7 +10,7 @@ services:
       - redis
     restart: always # Corrected the syntax for restart policy
     env_file:
-      - .env
+      - stack.env
   redis:
     image: redis:7
     volumes:
