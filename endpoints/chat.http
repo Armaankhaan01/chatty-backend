@@ -9,7 +9,7 @@ Accept: application/json
 withCredentials: true
 
 ###
-GET {{baseUrl}}/{{urlPath}}/chat/message/user/6756fb547511203e96e9c01c
+GET {{baseUrl}}/{{urlPath}}/chat/message/user/67df0cd1879c9a4c98cf690b
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
@@ -22,12 +22,12 @@ Accept: application/json
 withCredentials: true
 
 {
-  "conversationId": "6756fba37511203e96e9c027",
-  "receiverId": "6751ed5c58444954b7b708c6",
-  "receiverUsername": "Test3",
+  "conversationId": "67e19ee3373f6c41a0359098",
+  "receiverId": "67df0cd1879c9a4c98cf690b",
+  "receiverUsername": "Arkarman",
   "receiverAvatarColor": "red",
-  "receiverProfilePicture": "https://res.cloudinary.com/dpey3zzge/image/upload/v1733422313/6751ece858444954b7b708b5",
-  "body": "This is the last last last Message from test1 to test3",
+  "receiverProfilePicture": "https://res.cloudinary.com/dpey3zzge/image/upload/v1733422313/67df0cd1879c9a4c98cf690b",
+  "body": "This Arkarman  is the Message from test129 to Arkarman",
   "gifUrl": "",
   "isRead": false,
   "selectedImage": ""
@@ -40,8 +40,8 @@ Accept: application/json
 withCredentials: true
 
 {
-  "userOne": "6751ece858444954b7b708b5",
-  "userTwo": "6751ece958444954b7b708b8"
+  "userOne": "67df0cd1879c9a4c98cf690b",
+  "userTwo": "67c5497e43580de79b19960d"
 }
 
 ###
