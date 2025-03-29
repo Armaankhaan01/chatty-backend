@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "pm2 start ./build/app.js --attach -i max --watch | bunyan",
+    "start": "pm2 start ./build/app.js --attach -i 2 --watch | bunyan",
     "stop": "pm2 stop all",
     "delete": "pm2 delete all",
     "start:dev": "pm2 start -r tsconfig-paths/register src/app.ts -i 4 --watch  | bunyan",
