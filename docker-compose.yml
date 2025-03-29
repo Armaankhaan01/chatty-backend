@@ -1,23 +1,24 @@
-version: '3.9'
 services:
   chatty-backend:
     build:
-      context: . # Use the Dockerfile in the current directory
+      context: .
       dockerfile: Dockerfile
     ports:
       - '5000:5000'
     depends_on:
       - redis
-    restart: always # Corrected the syntax for restart policy
+    restart: always
     env_file:
       - stack.env
+
   redis:
     image: redis:7
     volumes:
-      - ${REDIS_DATA:-./redis_data}:/data # Default value if REDIS_DATA isn't set
-    restart: always # Added restart policy for Redis to ensure it restarts automatically
+      - ${REDIS_DATA:-./redis_data}:/data
+    restart: always
+    ports:
+      - '6370:6379'
 
 volumes:
-  # This section ensures the volume is created and mapped correctly
   redis_data:
     driver: local

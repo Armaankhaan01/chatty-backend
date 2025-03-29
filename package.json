@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "pm2 start ./build/app.js -i 4 --watch  | bunyan",
+    "start": "pm2 start ./build/app.js --attach -i max --watch | bunyan",
     "stop": "pm2 stop all",
     "delete": "pm2 delete all",
     "start:dev": "pm2 start -r tsconfig-paths/register src/app.ts -i 4 --watch  | bunyan",
@@ -29,7 +29,7 @@
     "bcryptjs": "^2.4.3",
     "bull": "^4.16.0",
     "bunyan": "^1.8.15",
-    "canvas": "^2.11.2",
+    "canvas": "^3.1.0",
     "cloudinary": "^2.4.0",
     "compression": "^1.7.4",
     "cookie-session": "^2.1.0",
