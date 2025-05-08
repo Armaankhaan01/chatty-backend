@@ -44,6 +44,7 @@ export class SignIn {
     } as IUserDocument;
 
     req.session = { jwt: userJwt };
+    res.setHeader('Authorization', `Bearer ${userJwt}`);
     res.status(HTTP_STATUS.OK).json({ message: 'User login successfully', user: userDocument, token: userJwt });
   }
 }
