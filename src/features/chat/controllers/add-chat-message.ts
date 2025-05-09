@@ -9,11 +9,9 @@ import mongoose from 'mongoose';
 import { UploadApiResponse } from 'cloudinary';
 import { uploads } from '@globals/helpers/cloudinary-upload';
 import { BadRequestError } from '@globals/helpers/error-handler';
-import { IMessageData, IMessageNotification } from '@chat/interfaces/chat.interface';
+import { IMessageData } from '@chat/interfaces/chat.interface';
 import { socketIOChatObject } from '@sockets/chat.socket';
-import { INotificationTemplate } from '@notification/interfaces/notification.interface';
-import { notificationTemplate } from '@services/emails/templates/notifications/notification-template';
-import { emailQueue } from '@services/queues/email.queue';
+
 import { MessageCache } from '@services/redis/message.cache';
 import { chatQueue } from '@services/queues/chat.queue';
 
@@ -70,16 +68,6 @@ export class Add {
     };
     Add.prototype.emitSocketIOEvent(messageData);
 
-    if (!isRead) {
-      Add.prototype.messageNotification({
-        currentUser: req.currentUser!,
-        message: body,
-        receiverName: receiverUsername,
-        receiverId,
-        messageData
-      });
-    }
-
     await messageCache.addChatListToCache(`${req.currentUser!.userId}`, `${receiverId}`, `${conversationObjectId}`);
     await messageCache.addChatListToCache(`${receiverId}`, `${req.currentUser!.userId}`, `${conversationObjectId}`);
     await messageCache.addChatMessageToCache(`${conversationObjectId}`, messageData);
@@ -105,20 +93,20 @@ export class Add {
     socketIOChatObject.emit('chat list', data);
   }
 
-  private async messageNotification({ currentUser, message, receiverName, receiverId }: IMessageNotification): Promise<void> {
-    const cachedUser: IUserDocument = (await userCache.getUserFromCache(`${receiverId}`)) as IUserDocument;
-    if (cachedUser.notifications.messages) {
-      const templateParams: INotificationTemplate = {
-        username: receiverName,
-        message,
-        header: `Message notification from ${currentUser.username}`
-      };
-      const template: string = notificationTemplate.notificationMessageTemplate(templateParams);
-      emailQueue.addEmailJob('directMessageEmail', {
-        receiverEmail: cachedUser.email!,
-        template,
-        subject: `You've received messages from ${currentUser.username}`
-      });
-    }
-  }
+  // private async messageNotification({ currentUser, message, receiverName, receiverId }: IMessageNotification): Promise<void> {
+  //   const cachedUser: IUserDocument = (await userCache.getUserFromCache(`${receiverId}`)) as IUserDocument;
+  //   if (cachedUser.notifications.messages) {
+  //     const templateParams: INotificationTemplate = {
+  //       username: receiverName,
+  //       message,
+  //       header: `Message notification from ${currentUser.username}`
+  //     };
+  //     const template: string = notificationTemplate.notificationMessageTemplate(templateParams);
+  //     emailQueue.addEmailJob('directMessageEmail', {
+  //       receiverEmail: cachedUser.email!,
+  //       template,
+  //       subject: `You've received messages from ${currentUser.username}`
+  //     });
+  //   }
+  // }
 }
