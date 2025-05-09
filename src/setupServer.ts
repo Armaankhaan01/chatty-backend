@@ -48,9 +48,7 @@ export class ChattyServer {
         keys: [config.SECRET_KEY_ONE!, config.SECRET_KEY_TWO!],
         maxAge: 24 * 7 * 3600000, // 7 days
         secure: true,
-        domain: '.arkarman.xyz', // Note the leading dot is important
-        sameSite: 'lax', // 'lax' is often best for cross-subdomain
-        httpOnly: true
+        domain: '.arkarman.xyz'
       })
     );
     app.use(hpp());
