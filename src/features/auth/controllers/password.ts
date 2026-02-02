@@ -4,7 +4,7 @@ import HTTP_STATUS from 'http-status-codes';
 import { authService } from '@services/db/auth.service';
 import { IAuthDocument } from '@auth/interfaces/auth.interface';
 import { BadRequestError } from '@globals/helpers/error-handler';
-import { emailQueue } from '@services/queues/email.queue';
+import { getEmailQueue } from '@services/queues/email.queue';
 import { joiValidation } from '@globals/decorators/joi-validation.decorators';
 import { emailSchema, passwordSchema } from '@auth/schemes/password';
 import crypto from 'crypto';
@@ -27,7 +27,7 @@ export class Password {
     await authService.updatePasswordToken(`${existingUser._id}`, randomChars, Date.now() + 60 * 60 * 1000);
     const resetLink = `${config.CLIENT_URL}/reset-password?token=${randomChars}`;
     const template: string = forgotPasswordTemplate.passwordResetTemplate(existingUser.username, resetLink);
-    emailQueue.addEmailJob('forgotPasswordEmail', { template, receiverEmail: email, subject: 'Reset your Password' });
+    getEmailQueue().addEmailJob('forgotPasswordEmail', { template, receiverEmail: email, subject: 'Reset your Password' });
     res.status(HTTP_STATUS.OK).json({ message: 'Password reset email sent successfully' });
   }
   @joiValidation(passwordSchema)
@@ -54,7 +54,7 @@ export class Password {
       date: moment().format('DD-MM-YYYY HH:mm')
     };
     const template: string = resetPasswordTemplate.passwordResetConfirmationTemplate(templateParams);
-    emailQueue.addEmailJob('forgotPasswordEmail', { template, receiverEmail: existingUser.email, subject: 'Password reset Confirmation' });
+    getEmailQueue().addEmailJob('forgotPasswordEmail', { template, receiverEmail: existingUser.email, subject: 'Password reset Confirmation' });
     res.status(HTTP_STATUS.OK).json({ message: 'Password reset Successfully.' });
   }
 }

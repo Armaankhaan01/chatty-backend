@@ -19,9 +19,6 @@ export class FollowerCache extends BaseCache {
 
   public async saveFollowerToCache(key: string, value: string): Promise<void> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       await this.client.LPUSH(key, value);
     } catch (error) {
       log.error(error);
@@ -31,9 +28,6 @@ export class FollowerCache extends BaseCache {
 
   public async removeFollowerFromCache(key: string, value: string): Promise<void> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       const result = await this.client.LREM(key, 1, value);
       log.info(`Removed ${result} item(s) from ${key} with value ${value}`);
     } catch (error) {
@@ -44,9 +38,6 @@ export class FollowerCache extends BaseCache {
 
   public async updateFollowersCountInCache(userId: string, prop: string, value: number): Promise<void> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       await this.client.HINCRBY(`users:${userId}`, prop, value);
     } catch (error) {
       log.error(error);
@@ -56,9 +47,6 @@ export class FollowerCache extends BaseCache {
 
   public async getFollowersFromCache(key: string): Promise<IFollowerData[]> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       const response: string[] = await this.client.LRANGE(key, 0, -1);
       const list: IFollowerData[] = [];
       for (const item of response) {
@@ -85,10 +73,6 @@ export class FollowerCache extends BaseCache {
 
   public async updateBlockedUserPropInCache(key: string, prop: string, value: string, type: 'block' | 'unblock'): Promise<void> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
-
       const response: string = (await this.client.HGET(`users:${key}`, prop)) as string;
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
       let blocked: string[] = Helpers.parseJson(response) as string[];

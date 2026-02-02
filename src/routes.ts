@@ -8,7 +8,7 @@ import { authMiddleware } from '@middlewares/auth.middleware';
 import { notificationRoutes } from '@notification/routes/notificationRoutes';
 import { postRoutes } from '@post/routes/postRoutes';
 import { reactionRoutes } from '@reaction/routes/reaction-routes';
-import { serverAdapter } from '@services/queues/base.queue';
+import { serverAdapter } from '@services/queues/bull-board';
 import { healthRoutes } from '@user/routes/healthRoutes';
 import { userRoutes } from '@user/routes/userRoutes';
 import { Application } from 'express';

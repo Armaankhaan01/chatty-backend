@@ -4,9 +4,10 @@ import { authMockRequests, authMockResponse, authUserPayload } from '@mocks/auth
 import { Update } from '@user/controllers/change-password';
 import { CustomError } from '@globals/helpers/error-handler';
 import { existingUser } from '@mocks/user.mock';
-import { emailQueue } from '@services/queues/email.queue';
+
 import { userService } from '@services/db/user.service';
 import { authService } from '@services/db/auth.service';
+import { getEmailQueue } from '@services/queues/email.queue';
 
 jest.useFakeTimers();
 jest.mock('@services/queues/base.queue');
@@ -113,11 +114,11 @@ describe('ChangePassword', () => {
       };
       jest.spyOn(authService, 'getAuthUserByUsername').mockResolvedValue(mockUser as any);
       jest.spyOn(userService, 'updatePassword');
-      const spy = jest.spyOn(emailQueue, 'addEmailJob');
+      const spy = jest.spyOn(getEmailQueue(), 'addEmailJob');
 
       await Update.prototype.password(req, res);
       expect(userService.updatePassword).toHaveBeenCalledWith(`${req.currentUser!.username}`, 'djejdjr123482ejsj');
-      expect(emailQueue.addEmailJob).toHaveBeenCalledWith(spy.mock.calls[0][0], spy.mock.calls[0][1]);
+      expect(getEmailQueue().addEmailJob).toHaveBeenCalledWith(spy.mock.calls[0][0], spy.mock.calls[0][1]);
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
         message: 'Password updated successfully. You will be redirected shortly to the login page.'

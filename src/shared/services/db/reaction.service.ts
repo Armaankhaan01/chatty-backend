@@ -10,8 +10,8 @@ import mongoose from 'mongoose';
 import { INotificationDocument, INotificationTemplate } from '@notification/interfaces/notification.interface';
 import { socketIONotificationObject } from '@sockets/notification.socket';
 import { notificationTemplate } from '@services/emails/templates/notifications/notification-template';
-import { emailQueue } from '@services/queues/email.queue';
 import { NotificationModel } from '@notification/models/notification.schema';
+import { getEmailQueue } from '@services/queues/email.queue';
 
 const userCache: UserCache = new UserCache();
 
@@ -61,7 +61,7 @@ class ReactionService {
         header: 'Post Reaction Notification'
       };
       const template: string = notificationTemplate.notificationMessageTemplate(templateParams);
-      emailQueue.addEmailJob('reactionsEmail', {
+      getEmailQueue().addEmailJob('reactionsEmail', {
         receiverEmail: updatedReaction[0].email!,
         template,
         subject: 'Post reaction notification'

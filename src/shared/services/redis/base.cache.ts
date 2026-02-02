@@ -1,21 +1,12 @@
-import { createClient } from 'redis';
 import Logger from 'bunyan';
 import { config } from '@root/config';
-export type RedisClient = ReturnType<typeof createClient>;
+import { redisClient } from './redis.client';
 
 export abstract class BaseCache {
-  client: RedisClient;
-  log: Logger;
+  protected client = redisClient;
+  protected log: Logger;
 
   constructor(cacheName: string) {
-    this.client = createClient({ url: config.REDIS_HOST });
     this.log = config.createLogger(cacheName);
-    this.cacheError();
-  }
-
-  private cacheError(): void {
-    this.client.on('error', (err: unknown) => {
-      this.log.error(err);
-    });
   }
 }

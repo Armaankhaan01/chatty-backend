@@ -18,4 +18,13 @@ class EmailQueue extends BaseQueue {
   }
 }
 
-export const emailQueue: EmailQueue = new EmailQueue();
+
+
+let emailQueue: EmailQueue;
+
+export const getEmailQueue = () => {
+  if (!emailQueue) {
+    emailQueue = new EmailQueue();
+  }
+  return emailQueue;
+};

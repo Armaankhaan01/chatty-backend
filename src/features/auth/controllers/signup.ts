@@ -11,7 +11,7 @@ import HTTP_STATUS from 'http-status-codes';
 import { IUserDocument } from '@user/interfaces/user.interface';
 import { UserCache } from '@services/redis/user.cache';
 import JWT from 'jsonwebtoken';
-import { authQueue } from '@services/queues/auth.queue';
+import { getAuthQueue } from '@services/queues/auth.queue';
 import { userQueue } from '@services/queues/user.queue';
 import { config } from '@root/config';
 import { BadRequestError } from '@globals/helpers/error-handler';
@@ -50,7 +50,7 @@ export class SignUp {
     await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
 
     // Add to database
-    authQueue.addAuthUserJob('addAuthUserToDB', { value: authData });
+    getAuthQueue().addAuthUserJob('addAuthUserToDB', { value: authData });
     userQueue.addUserJob('addUserToDB', { value: userDataForCache });
 
     const userJwt: string = SignUp.prototype.signToken(authData, userObjectId);

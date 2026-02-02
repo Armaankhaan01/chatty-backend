@@ -10,7 +10,8 @@ import { BadRequestError } from '@globals/helpers/error-handler';
 import { authService } from '@services/db/auth.service';
 import { IAuthDocument } from '@auth/interfaces/auth.interface';
 import { resetPasswordTemplate } from '@services/emails/templates/reset-password/reset-password-template';
-import { emailQueue } from '@services/queues/email.queue';
+import { getEmailQueue } from '@services/queues/email.queue';
+
 
 export class Update {
   @joiValidation(changePasswordSchema)
@@ -34,7 +35,7 @@ export class Update {
       date: moment().format('DD//MM//YYYY HH:mm')
     };
     const template: string = resetPasswordTemplate.passwordResetConfirmationTemplate(templateParams);
-    emailQueue.addEmailJob('changePassword', { template, receiverEmail: existingUser.email!, subject: 'Password update confirmation' });
+    getEmailQueue().addEmailJob('changePassword', { template, receiverEmail: existingUser.email!, subject: 'Password update confirmation' });
     res.status(HTTP_STATUS.OK).json({
       message: 'Password updated successfully. You will be redirected shortly to the login page.'
     });

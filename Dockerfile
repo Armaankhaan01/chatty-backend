@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
 
 # Install dependencies (including gulp, typescript, etc.)
-RUN npm install --legacy-peer-deps
+RUN npm install
 
 # Install Gulp globally
 RUN npm install -g gulp-cli

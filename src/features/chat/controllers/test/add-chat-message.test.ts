@@ -7,10 +7,11 @@ import { Add } from '@chat/controllers/add-chat-message';
 import { chatQueue } from '@services/queues/chat.queue';
 import { authUserPayload } from '@mocks/auth.mock';
 import { MessageCache } from '@services/redis/message.cache';
-import { emailQueue } from '@services/queues/email.queue';
+
 import { existingUser, existingUserTwo } from '@mocks/user.mock';
 import { notificationTemplate } from '@services/emails/templates/notifications/notification-template';
 import { UserCache } from '@services/redis/user.cache';
+import { getEmailQueue } from '@services/queues/email.queue';
 
 jest.useFakeTimers();
 jest.mock('@services/queues/base.queue');
@@ -51,7 +52,7 @@ describe('Add', () => {
     const req: Request = chatMockRequest({}, chatMessage, authUserPayload) as Request;
     const res: Response = chatMockResponse();
     jest.spyOn(UserCache.prototype, 'getUserFromCache').mockResolvedValue(existingUserTwo);
-    jest.spyOn(emailQueue, 'addEmailJob');
+    jest.spyOn(getEmailQueue(), 'addEmailJob');
 
     const templateParams = {
       username: existingUserTwo.username!,
@@ -61,7 +62,7 @@ describe('Add', () => {
     const template: string = notificationTemplate.notificationMessageTemplate(templateParams);
 
     await Add.prototype.message(req, res);
-    expect(emailQueue.addEmailJob).toHaveBeenCalledWith('directMessageEmail', {
+    expect(getEmailQueue().addEmailJob).toHaveBeenCalledWith('directMessageEmail', {
       receiverEmail: existingUserTwo.email!,
       template,
       subject: `You've received messages from ${req.currentUser!.username!}`
@@ -72,7 +73,7 @@ describe('Add', () => {
     chatMessage.isRead = true;
     const req: Request = chatMockRequest({}, chatMessage, authUserPayload) as Request;
     const res: Response = chatMockResponse();
-    jest.spyOn(emailQueue, 'addEmailJob');
+    jest.spyOn(getEmailQueue(), 'addEmailJob');
     jest.spyOn(UserCache.prototype, 'getUserFromCache').mockResolvedValue(existingUser);
 
     const templateParams = {
@@ -83,7 +84,7 @@ describe('Add', () => {
     const template: string = notificationTemplate.notificationMessageTemplate(templateParams);
 
     await Add.prototype.message(req, res);
-    expect(emailQueue.addEmailJob).not.toHaveBeenCalledWith('directMessageMail', {
+    expect(getEmailQueue().addEmailJob).not.toHaveBeenCalledWith('directMessageMail', {
       receiverEmail: req.currentUser!.email,
       template,
       subject: `You've received messages from ${existingUserTwo.username!}`

@@ -14,4 +14,11 @@ class BlockedUserQueue extends BaseQueue {
   }
 }
 
-export const blockedUserQueue: BlockedUserQueue = new BlockedUserQueue();
+let blockedUserQueue: BlockedUserQueue;
+
+export const getBlockedUserQueue = () => {
+  if (!blockedUserQueue) {
+    blockedUserQueue = new BlockedUserQueue();
+  }
+  return blockedUserQueue;
+};

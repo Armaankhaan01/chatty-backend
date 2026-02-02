@@ -102,7 +102,7 @@ export class Add {
   //       header: `Message notification from ${currentUser.username}`
   //     };
   //     const template: string = notificationTemplate.notificationMessageTemplate(templateParams);
-  //     emailQueue.addEmailJob('directMessageEmail', {
+  //     getEmailQueue().ddEmailJob('directMessageEmail', {
   //       receiverEmail: cachedUser.email!,
   //       template,
   //       subject: `You've received messages from ${currentUser.username}`

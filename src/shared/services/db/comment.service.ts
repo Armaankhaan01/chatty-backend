@@ -8,7 +8,7 @@ import { IUserDocument } from '@user/interfaces/user.interface';
 import { NotificationModel } from '@notification/models/notification.schema';
 import { INotificationDocument, INotificationTemplate } from '@notification/interfaces/notification.interface';
 import { notificationTemplate } from '@services/emails/templates/notifications/notification-template';
-import { emailQueue } from '@services/queues/email.queue';
+import { getEmailQueue } from '@services/queues/email.queue';
 import { socketIONotificationObject } from '@sockets/notification.socket';
 
 const userCache: UserCache = new UserCache();
@@ -49,7 +49,7 @@ class CommentService {
         header: 'Comment Notification'
       };
       const template: string = notificationTemplate.notificationMessageTemplate(templateParams);
-      emailQueue.addEmailJob('commentsEmail', { receiverEmail: response[2].email!, template, subject: 'Post notification' });
+      getEmailQueue().addEmailJob('commentsEmail', { receiverEmail: response[2].email!, template, subject: 'Post notification' });
     }
   }
 

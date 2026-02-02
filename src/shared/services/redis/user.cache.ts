@@ -62,9 +62,6 @@ export class UserCache extends BaseCache {
     };
 
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       await this.client.ZADD('user', { score: parseInt(userUId, 10), value: `${key}` });
       for (const [itemKey, itemValue] of Object.entries(dataToSave)) {
         this.client.HSET(`users:${key}`, `${itemKey}`, `${itemValue}`);
@@ -77,9 +74,6 @@ export class UserCache extends BaseCache {
 
   public async getUserFromCache(key: string): Promise<IUserDocument | null> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       const response: IUserDocument = (await this.client.HGETALL(`users:${key}`)) as unknown as IUserDocument;
       response.createdAt = new Date(Helpers.parseJson(`${response.createdAt}`));
       response.postsCount = Helpers.parseJson(`${response.postsCount}`);
@@ -105,9 +99,6 @@ export class UserCache extends BaseCache {
 
   public async updateSingleUserItemInCache(userId: string, prop: string, value: UserItem): Promise<IUserDocument | null> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       await this.client.HSET(`users:${userId}`, `${prop}`, JSON.stringify(value));
       const response: IUserDocument = (await this.getUserFromCache(userId)) as IUserDocument;
       return response;
@@ -119,9 +110,6 @@ export class UserCache extends BaseCache {
 
   public async getUsersFromCache(start: number, end: number, excludedUserKey: string): Promise<IUserDocument[]> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       const response: string[] = await this.client.ZRANGE('user', start, end, { REV: true });
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
       for (const key of response) {
@@ -159,9 +147,6 @@ export class UserCache extends BaseCache {
 
   public async getRandomUsersFromCache(userId: string, excludedUsername: string): Promise<IUserDocument[]> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       const replies: IUserDocument[] = [];
       const followers: string[] = await this.client.LRANGE(`followers:${userId}`, 0, -1);
       const users: string[] = await this.client.ZRANGE('user', 0, -1);
@@ -201,9 +186,6 @@ export class UserCache extends BaseCache {
 
   public async getTotalUsersInCache(): Promise<number> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       const count: number = await this.client.ZCARD('user');
       return count;
     } catch (error) {

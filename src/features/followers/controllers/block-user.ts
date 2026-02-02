@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import HTTP_STATUS from 'http-status-codes';
 import { FollowerCache } from '@services/redis/follower.cache';
-import { blockedUserQueue } from '@services/queues/block.queue';
+import { getBlockedUserQueue } from '@services/queues/block.queue';
 
 const followerCache: FollowerCache = new FollowerCache();
 
@@ -9,7 +9,7 @@ export class AddUser {
   public async block(req: Request, res: Response): Promise<void> {
     const { followerId } = req.params;
     AddUser.prototype.updateBlockedUser(followerId, req.currentUser!.userId, 'block');
-    blockedUserQueue.addBlockedUserJob('addBlockedUserToDB', {
+    getBlockedUserQueue().addBlockedUserJob('addBlockedUserToDB', {
       keyOne: `${req.currentUser!.userId}`,
       keyTwo: `${followerId}`,
       type: 'block'
@@ -20,7 +20,7 @@ export class AddUser {
   public async unblock(req: Request, res: Response): Promise<void> {
     const { followerId } = req.params;
     AddUser.prototype.updateBlockedUser(followerId, req.currentUser!.userId, 'unblock');
-    blockedUserQueue.addBlockedUserJob('removeBlockedUserFromDB', {
+    getBlockedUserQueue().addBlockedUserJob('removeBlockedUserFromDB', {
       keyOne: `${req.currentUser!.userId}`,
       keyTwo: `${followerId}`,
       type: 'unblock'

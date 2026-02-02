@@ -9,7 +9,7 @@ import { INotificationDocument, INotificationTemplate } from '@notification/inte
 import { NotificationModel } from '@notification/models/notification.schema';
 import { socketIONotificationObject } from '@sockets/notification.socket';
 import { notificationTemplate } from '@services/emails/templates/notifications/notification-template';
-import { emailQueue } from '@services/queues/email.queue';
+import { getEmailQueue } from '@services/queues/email.queue';
 import { UserCache } from '@services/redis/user.cache';
 import { map } from 'lodash';
 
@@ -70,7 +70,7 @@ class FollowerService {
         header: 'Follower Notification'
       };
       const template: string = notificationTemplate.notificationMessageTemplate(templateParams);
-      emailQueue.addEmailJob('followersEmail', {
+      getEmailQueue().addEmailJob('followersEmail', {
         receiverEmail: response[1].email!,
         template,
         subject: `${username} is now following you.`

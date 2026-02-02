@@ -16,9 +16,6 @@ export class MessageCache extends BaseCache {
 
   public async addChatListToCache(senderId: string, receiverId: string, conversationId: string): Promise<void> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       const userChatList = await this.client.LRANGE(`chatList:${senderId}`, 0, -1);
       if (userChatList.length === 0) {
         await this.client.RPUSH(`chatList:${senderId}`, JSON.stringify({ receiverId, conversationId }));
@@ -36,9 +33,6 @@ export class MessageCache extends BaseCache {
 
   public async addChatMessageToCache(conversationId: string, value: IMessageData): Promise<void> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       await this.client.RPUSH(`messages:${conversationId}`, JSON.stringify(value));
     } catch (error) {
       log.error(error);
@@ -48,9 +42,6 @@ export class MessageCache extends BaseCache {
 
   public async addChatUsersToCache(value: IChatUsers): Promise<IChatUsers[]> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       const users: IChatUsers[] = await this.getChatUsersList();
       const usersIndex: number = findIndex(users, (listItem: IChatUsers) => JSON.stringify(listItem) === JSON.stringify(value));
       let chatUsers: IChatUsers[] = [];
@@ -69,9 +60,6 @@ export class MessageCache extends BaseCache {
 
   public async removeChatUsersFromCache(value: IChatUsers): Promise<IChatUsers[]> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       const users: IChatUsers[] = await this.getChatUsersList();
       const usersIndex: number = findIndex(users, (listItem: IChatUsers) => JSON.stringify(listItem) === JSON.stringify(value));
       let chatUsers: IChatUsers[] = [];
@@ -90,9 +78,6 @@ export class MessageCache extends BaseCache {
 
   public async getUserConversationList(key: string): Promise<IMessageData[]> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       const userChatList: string[] = await this.client.LRANGE(`chatList:${key}`, 0, -1);
       const conversationChatList: IMessageData[] = [];
       for (const item of userChatList) {
@@ -109,9 +94,6 @@ export class MessageCache extends BaseCache {
 
   public async getChatMessagesFromCache(senderId: string, receiverId: string): Promise<IMessageData[]> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       const userChatList: string[] = await this.client.LRANGE(`chatList:${senderId}`, 0, -1);
       const receiver: string = find(userChatList, (listItem: string) => listItem.includes(receiverId)) as string;
       const parsedReceiver: IChatList = Helpers.parseJson(receiver) as IChatList;
@@ -134,9 +116,6 @@ export class MessageCache extends BaseCache {
 
   public async markMessageAsDeleted(senderId: string, receiverId: string, messageId: string, type: string): Promise<IMessageData> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       const { index, message, receiver } = await this.getMessage(senderId, receiverId, messageId);
       const chatItem = Helpers.parseJson(message) as IMessageData;
       if (type === 'deleteForMe') {
@@ -157,9 +136,6 @@ export class MessageCache extends BaseCache {
 
   public async updateChatMessages(senderId: string, receiverId: string): Promise<IMessageData> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       const userChatList: string[] = await this.client.LRANGE(`chatList:${senderId}`, 0, -1);
       const receiver: string = find(userChatList, (listItem: string) => listItem.includes(receiverId)) as string;
       const parsedReceiver: IChatList = Helpers.parseJson(receiver) as IChatList;
@@ -187,9 +163,6 @@ export class MessageCache extends BaseCache {
     type: 'add' | 'remove'
   ): Promise<IMessageData> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       const messages: string[] = await this.client.LRANGE(`messages:${conversationId}`, 0, -1);
       const messageIndex: number = findIndex(messages, (listItem: string) => listItem.includes(messageId));
       const message: string = (await this.client.LINDEX(`messages:${conversationId}`, messageIndex)) as string;

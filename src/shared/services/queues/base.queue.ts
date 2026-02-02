@@ -1,6 +1,3 @@
-import { ExpressAdapter } from '@bull-board/express';
-import { BullAdapter } from '@bull-board/api/bullAdapter';
-import { createBullBoard } from '@bull-board/api';
 import Queue, { Job } from 'bull';
 import Logger from 'bunyan';
 import { config } from '@root/config';
@@ -13,6 +10,8 @@ import { IFollowerJobData } from '@follower/interfaces/follower.interface';
 import { INotificationJobData } from '@notification/interfaces/notification.interface';
 import { IFileImageJobData } from '@image/interfaces/image.interface';
 import { IChatJobData, IMessageData } from '@chat/interfaces/chat.interface';
+import { bullBlockingClient, bullClient, bullSubscriber } from './bull.redis';
+import { registerQueue } from './bull-board';
 
 type IBaseJobData =
   | IAuthJob
@@ -27,23 +26,27 @@ type IBaseJobData =
   | IChatJobData
   | IMessageData;
 
-let bullAdapters: BullAdapter[] = [];
-
-export let serverAdapter: ExpressAdapter;
-
 export abstract class BaseQueue {
-  queue: Queue.Queue;
-  log: Logger;
+  protected queue: Queue.Queue;
+  protected log: Logger;
 
   constructor(queueName: string) {
-    this.queue = new Queue(queueName, `${config.REDIS_HOST}`);
-    bullAdapters.push(new BullAdapter(this.queue));
-    bullAdapters = [...new Set(bullAdapters)];
-    serverAdapter = new ExpressAdapter();
-    serverAdapter.setBasePath('/queues');
+    this.queue = new Queue(queueName, {
+      createClient: (type) => {
+        switch (type) {
+          case 'client':
+            return bullClient;
+          case 'subscriber':
+            return bullSubscriber;
+          case 'bclient':
+            return bullBlockingClient;
+          default:
+            return bullClient;
+        }
+      }
+    });
 
-    createBullBoard({ queues: bullAdapters, serverAdapter });
-
+    registerQueue(this.queue);
     this.log = config.createLogger(`${queueName} Queue`);
 
     this.queue.on('completed', (job: Job) => {

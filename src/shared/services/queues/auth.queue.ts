@@ -13,4 +13,11 @@ class AuthQueue extends BaseQueue {
   }
 }
 
-export const authQueue: AuthQueue = new AuthQueue();
+let authQueue: AuthQueue;
+
+export const getAuthQueue = () => {
+  if (!authQueue) {
+    authQueue = new AuthQueue();
+  }
+  return authQueue;
+};

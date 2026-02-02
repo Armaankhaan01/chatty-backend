@@ -61,10 +61,6 @@ export class PostCache extends BaseCache {
     };
 
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
-
       const postCount: string[] = await this.client.HMGET(`users:${currentUserId}`, 'postsCount');
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
       const score = new Date(createdAt || '').getTime() + Math.random();
@@ -83,10 +79,6 @@ export class PostCache extends BaseCache {
 
   public async getPostsFromCache(key: string, start: number, end: number): Promise<IPostDocument[]> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
-
       const reply: string[] = await this.client.ZRANGE(key, start, end, { REV: true });
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
       for (const value of reply) {
@@ -110,9 +102,6 @@ export class PostCache extends BaseCache {
 
   public async getTotalPostsInCache(): Promise<number> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       const count: number = await this.client.ZCARD('posts:post');
       return count;
     } catch (error) {
@@ -123,10 +112,6 @@ export class PostCache extends BaseCache {
 
   public async getPostsWithImagesFromCache(key: string, start: number, end: number): Promise<IPostDocument[]> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
-
       const reply: string[] = await this.client.ZRANGE(key, start, end, { REV: true });
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
       for (const value of reply) {
@@ -151,10 +136,6 @@ export class PostCache extends BaseCache {
 
   public async getTotalPostWithImagesCount(): Promise<number> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
-
       const allPostIds: string[] = await this.client.ZRANGE('posts:post', 0, -1, { REV: true });
       let count = 0;
       const multi = this.client.multi();
@@ -178,13 +159,8 @@ export class PostCache extends BaseCache {
     }
   }
 
-
   public async getPostsWithVideosFromCache(key: string, start: number, end: number): Promise<IPostDocument[]> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
-
       const reply: string[] = await this.client.ZRANGE(key, start, end, { REV: true });
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
       for (const value of reply) {
@@ -209,10 +185,6 @@ export class PostCache extends BaseCache {
 
   public async getUserPostsFromCache(key: string, uId: number): Promise<IPostDocument[]> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
-
       const reply: string[] = await this.client.ZRANGE(key, uId, uId, { REV: true, BY: 'SCORE' });
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
       for (const value of reply) {
@@ -235,9 +207,6 @@ export class PostCache extends BaseCache {
 
   public async getTotalUserPostsInCache(uId: number): Promise<number> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       const count: number = await this.client.ZCOUNT('posts:post', uId, uId);
       return count;
     } catch (error) {
@@ -248,10 +217,6 @@ export class PostCache extends BaseCache {
 
   public async deletePostFromCache(key: string, currentUserId: string): Promise<void> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
-
       const postCount: string[] = await this.client.HMGET(`users:${currentUserId}`, 'postsCount');
       const multi = this.client.multi();
       multi.ZREM('posts:post', `${key}`);
@@ -291,9 +256,6 @@ export class PostCache extends BaseCache {
     };
 
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       for (const [itemKey, itemValue] of Object.entries(dataToSave)) {
         await this.client.HSET(`posts:${key}`, `${itemKey}`, `${itemValue}`);
       }

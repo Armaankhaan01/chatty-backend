@@ -11,7 +11,10 @@ class RedisConnection extends BaseCache {
 
   async connect(): Promise<void> {
     try {
-      await this.client.connect();
+      if (!this.client.isOpen) {
+        await this.client.connect();
+      }
+
       const res = await this.client.ping();
       log.info('Redis connection has been established', res);
     } catch (error) {
@@ -20,4 +23,4 @@ class RedisConnection extends BaseCache {
   }
 }
 
-export const redisConnection: RedisConnection = new RedisConnection();
+export const redisConnection = new RedisConnection();

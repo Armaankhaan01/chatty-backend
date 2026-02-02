@@ -15,9 +15,6 @@ export class ReactionCache extends BaseCache {
 
   public async getReactionsFromCache(postId: string): Promise<[IReactionDocument[], number]> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       const reactionsCount: number = await this.client.lLen(`reactions:${postId}`);
       const response: string[] = await this.client.lRange(`reactions:${postId}`, 0, -1);
       const list: IReactionDocument[] = [];
@@ -34,9 +31,6 @@ export class ReactionCache extends BaseCache {
 
   public async getSingleReactionByUsernameFromCache(postId: string, username: string): Promise<[IReactionDocument, number] | []> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
       const response: string[] = await this.client.lRange(`reactions:${postId}`, 0, -1);
       const list: IReactionDocument[] = [];
       for (const item of response) {
@@ -54,10 +48,6 @@ export class ReactionCache extends BaseCache {
 
   public async saveOrUpdatePostReaction(key: string, reaction: IReactionDocument, type: string, previousReaction?: string): Promise<void> {
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
-
       const postReactions = await this.getPostReactions(key);
 
       // Handle previous reaction removal

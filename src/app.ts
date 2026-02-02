@@ -3,14 +3,18 @@ import ChattyServer from '@root/setupServer';
 import databaseConnection from '@root/setupDatabase';
 import { config } from '@root/config';
 import Logger from 'bunyan';
+import { redisConnection } from '@services/redis/redis.connection';
+import { initBullBoard } from '@services/queues/bull-board';
 
 const log: Logger = config.createLogger('app');
 
 class Application {
-  public initialize(): void {
+  public async initialize(): Promise<void> {
     this.loadConfig();
     databaseConnection();
+    await redisConnection.connect();
     const app: Express = express();
+    initBullBoard();
     const server: ChattyServer = new ChattyServer(app);
     server.start();
     Application.handleExit();
